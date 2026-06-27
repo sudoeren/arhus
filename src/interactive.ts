@@ -40,8 +40,25 @@ async function interactiveScan(presetPath?: string) {
   const config = loadConfig(cwd);
   registerAllRules();
   const rules = getRules();
+
+  console.log(chalk.dim(`\n  Scanning: ${cwd}\n`));
+
+  const proceed = await confirm({
+    message: 'Proceed with scan?',
+    default: true,
+  });
+
+  if (!proceed) {
+    console.log(chalk.dim('\n  Cancelled.\n'));
+    return;
+  }
   const spinner = ora({
-    text: chalk.dim(`Scanning ${cwd} with ${rules.length} rules...`),
+    text: chalk.dim(`Scanning with ${rules.length} rules...`),
+    color: 'cyan',
+  }).start();
+
+  const results = await scanFiles(cwd, config.include, config.exclude);
+  const totalFindings = results.reduce((sum, r) => sum + r.findings.length, 0);
     color: 'cyan',
   }).start();
 
@@ -82,8 +99,20 @@ async function interactiveFix(presetPath?: string) {
   const config = loadConfig(cwd);
   registerAllRules();
   const rules = getRules();
+
+  console.log(chalk.dim(`\n  Scanning: ${cwd}\n`));
+
+  const proceed = await confirm({
+    message: 'Proceed with fix scan?',
+    default: true,
+  });
+
+  if (!proceed) {
+    console.log(chalk.dim('\n  Cancelled.\n'));
+    return;
+  }
   const spinner = ora({
-    text: chalk.dim(`Scanning ${cwd} with ${rules.length} rules...`),
+    text: chalk.dim(`Scanning with ${rules.length} rules...`),
     color: 'cyan',
   }).start();
 
