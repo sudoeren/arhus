@@ -2,6 +2,19 @@
   "name": "arhus-cli",
   "version": "0.2.9",
   "description": "local-first security analysis for TypeScript & JavaScript",
+  "license": "MIT",
+  "keywords": [
+    "security",
+    "scanner",
+    "analysis",
+    "typescript",
+    "javascript",
+    "cli",
+    "security-audit",
+    "static-analysis",
+    "sast",
+    "vulnerability"
+  ],
   "type": "module",
   "repository": {
     "type": "git",
