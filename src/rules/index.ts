@@ -8,6 +8,7 @@ import { sqlInjectionRule } from './sql-injection';
 import { commandInjectionRule } from './command-injection';
 import { debuggerRule } from './debugger';
 import { weakCryptoRule } from './weak-crypto';
+import { unvalidatedRedirectRule } from './unvalidated-redirect';
 
 export function registerAllRules(): void {
   registerRule(hardcodedSecretsRule);
@@ -18,4 +19,5 @@ export function registerAllRules(): void {
   registerRule(commandInjectionRule);
   registerRule(debuggerRule);
   registerRule(weakCryptoRule);
+  registerRule(unvalidatedRedirectRule);
 }
