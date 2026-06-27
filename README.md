@@ -61,6 +61,18 @@ arhus init   # creates .arhusrc
 {
   "include": ["**/*.{ts,tsx,js,jsx}"],
   "exclude": ["node_modules/**", "dist/**", ".git/**", "coverage/**", "**/*.test.*", "tests/**"],
-  "rules": {}
+  "rules": {
+    "no-console": false,
+    "no-debugger": "critical"
+  }
 }
 ```
+
+### Rule Configuration
+
+| Value | Effect |
+|---|---|
+| `true` or omitted | Rule runs with default severity |
+| `false` | Rule is disabled |
+| `"low"`, `"medium"`, `"high"`, `"critical"` | Override severity |
+| `{ "severity": "high" }` | Object form with severity override + future options |

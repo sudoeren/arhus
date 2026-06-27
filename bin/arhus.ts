@@ -27,8 +27,7 @@ program
 
     console.log(`\n  Scanning ${relative(process.cwd(), cwd) || '.'}...\n`);
 
-    const results = await scanFiles(cwd, config.include, config.exclude);
-
+    const results = await scanFiles(cwd, config);
     switch (options.format) {
       case 'json':
         console.log(jsonReport(results));
@@ -55,8 +54,7 @@ program
     const config = loadConfig(cwd);
     registerAllRules();
 
-    const results = await scanFiles(cwd, config.include, config.exclude);
-    const allFindings = results.flatMap(r => r.findings.map(f => ({ ...f, file: resolve(cwd, r.file) })));
+    const results = await scanFiles(cwd, config);    const allFindings = results.flatMap(r => r.findings.map(f => ({ ...f, file: resolve(cwd, r.file) })));
 
     const fixResults = applyFixes(
       allFindings.filter(f => f.suggestion),

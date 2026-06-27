@@ -2,20 +2,20 @@ import ts from 'typescript';
 import fg from 'fast-glob';
 import { readFileSync } from 'node:fs';
 import { relative, resolve } from 'node:path';
-import { getRules } from './rule';
-import type { Finding, Rule, ScanResult, RuleContext } from './types';
+import { getActiveRules } from './rule';
+import type { Finding, Rule, ScanResult, RuleContext, ArhusConfig } from './types';
 
-export async function scanFiles(targetPath: string, include: string[], exclude: string[]): Promise<ScanResult[]> {
+export async function scanFiles(targetPath: string, config: ArhusConfig): Promise<ScanResult[]> {
   const cwd = resolve(targetPath);
 
-  const files = await fg(include, {
+  const files = await fg(config.include, {
     cwd,
-    ignore: exclude,
+    ignore: config.exclude,
     absolute: true,
     onlyFiles: true,
   });
 
-  const rules = getRules();
+  const rules = getActiveRules(config);
   const results: ScanResult[] = [];
 
   for (const file of files) {

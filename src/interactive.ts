@@ -57,8 +57,7 @@ async function interactiveScan(presetPath?: string) {
     color: 'cyan',
   }).start();
 
-  const results = await scanFiles(cwd, config.include, config.exclude);
-  const totalFindings = results.reduce((sum, r) => sum + r.findings.length, 0);
+  const results = await scanFiles(cwd, config);  const totalFindings = results.reduce((sum, r) => sum + r.findings.length, 0);
 
   if (totalFindings === 0) {
     spinner.succeed(chalk.green('No issues found!'));
@@ -111,8 +110,7 @@ async function interactiveFix(presetPath?: string) {
     color: 'cyan',
   }).start();
 
-  const results = await scanFiles(cwd, config.include, config.exclude);
-  const allFindings: Finding[] = [];
+  const results = await scanFiles(cwd, config);  const allFindings: Finding[] = [];
 
   for (const r of results) {
     for (const f of r.findings) {

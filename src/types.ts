@@ -38,8 +38,13 @@ export interface ScanResult {
   findings: Finding[];
 }
 
+export interface RuleOptions {
+  severity?: Severity;
+  [key: string]: unknown;
+}
+
 export interface ArhusConfig {
   include: string[];
   exclude: string[];
-  rules: Record<string, boolean | Record<string, unknown>>;
+  rules: Record<string, boolean | Severity | RuleOptions>;
 }
