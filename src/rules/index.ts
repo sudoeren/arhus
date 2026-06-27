@@ -7,6 +7,7 @@ import { pathTraversalRule } from './path-traversal';
 import { sqlInjectionRule } from './sql-injection';
 import { commandInjectionRule } from './command-injection';
 import { debuggerRule } from './debugger';
+import { weakCryptoRule } from './weak-crypto';
 
 export function registerAllRules(): void {
   registerRule(hardcodedSecretsRule);
@@ -16,4 +17,5 @@ export function registerAllRules(): void {
   registerRule(sqlInjectionRule);
   registerRule(commandInjectionRule);
   registerRule(debuggerRule);
+  registerRule(weakCryptoRule);
 }
