@@ -1,10 +1,10 @@
-# Contributing to argus-cli
+# Contributing to arhus
 
 ## Setup
 
 ```bash
-git clone https://github.com/sudoeren/argus-cli.git
-cd argus-cli
+git clone https://github.com/sudoeren/arhus.git
+cd arhus
 bun install
 bun link
 ```
@@ -13,10 +13,10 @@ bun link
 
 ```bash
 # Interactive mode
-argus-cli
+arhus
 
 # Scan the project itself
-argus-cli scan .
+arhus scan .
 
 # Run all tests
 bun test

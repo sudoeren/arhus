@@ -1,12 +1,12 @@
-# argus-cli
+# arhus
 
 > scan. fix. repeat. — local-first security analysis with TypeScript AST-based auto-fix.
 
 ## Install
 
 ```bash
-git clone https://github.com/sudoeren/argus-cli.git
-cd argus-cli
+git clone https://github.com/sudoeren/arhus.git
+cd arhus
 bun install
 bun link
 ```
@@ -15,25 +15,25 @@ bun link
 
 ```bash
 # Interactive mode (menu-driven)
-argus-cli
+arhus
 
 # Scan a directory
-argus-cli scan ./src
+arhus scan ./src
 
 # Auto-fix (dry run — preview only)
-argus-cli fix ./src --dry-run
+arhus fix ./src --dry-run
 
 # Apply fixes
-argus-cli fix ./src
+arhus fix ./src
 
 # JSON output
-argus-cli scan ./src --format json
+arhus scan ./src --format json
 
 # SARIF output (GitHub Code Scanning)
-argus-cli scan ./src --format sarif
+arhus scan ./src --format sarif
 
 # Create config file
-argus-cli init
+arhus init
 ```
 
 ## Rules
@@ -50,7 +50,7 @@ argus-cli init
 ## Configuration
 
 ```bash
-argus-cli init   # creates .argusrc
+arhus init   # creates .arhusrc
 ```
 
 ```json

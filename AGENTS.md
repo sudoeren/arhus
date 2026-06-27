@@ -1,6 +1,6 @@
 # AGENTS.md
 
-## Project: argus-cli
+## Project: arhus
 
 scan. fix. repeat. — local-first security analysis with TypeScript AST-based auto-fix.
 
@@ -20,9 +20,9 @@ scan. fix. repeat. — local-first security analysis with TypeScript AST-based a
 
 | Command | Description |
 |---|---|
-| `argus-cli` | Interactive mode |
-| `argus-cli scan <path>` | Security scan |
-| `argus-cli fix <path>` | Auto-fix |
-| `argus-cli init` | Create .argusrc |
+| `arhus` | Interactive mode |
+| `arhus scan <path>` | Security scan |
+| `arhus fix <path>` | Auto-fix |
+| `arhus init` | Create .arhusrc |
 | `bun test` | Run tests |
 | `bun run build` | Build for Node.js |

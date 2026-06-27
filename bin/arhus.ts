@@ -7,12 +7,12 @@ import { scanFiles } from '../src/scanner';
 import { applyFixes } from '../src/fixer';
 import { terminalReport, jsonReport, sarifReport } from '../src/reporter';
 import { interactiveMode } from '../src/interactive';
-import type { ArgusConfig } from '../src/types';
+import type { ArhusConfig } from '../src/types';
 
 const program = new Command();
 
 program
-  .name('argus')
+  .name('arhus')
   .description('scan. fix. repeat. — local-first security analysis')
   .version('0.1.0');
 
@@ -75,24 +75,24 @@ program
 
 program
   .command('init')
-  .description('Create a default .argusrc configuration file')
+  .description('Create a default .arhusrc configuration file')
   .action(async () => {
     const fs = await import('node:fs');
-    const configPath = resolve(process.cwd(), '.argusrc');
+    const configPath = resolve(process.cwd(), '.arhusrc');
 
     if (fs.existsSync(configPath)) {
-      console.log(`  .argusrc already exists at ${configPath}`);
+      console.log(`  .arhusrc already exists at ${configPath}`);
       return;
     }
 
-    const defaultConfig: ArgusConfig = {
+    const defaultConfig: ArhusConfig = {
       include: ['**/*.{ts,tsx,js,jsx}'],
       exclude: ['node_modules/**', 'dist/**', '.git/**', 'coverage/**'],
       rules: {},
     };
 
     fs.writeFileSync(configPath, JSON.stringify(defaultConfig, null, 2), 'utf-8');
-    console.log(`  Created .argusrc at ${configPath}`);
+    console.log(`  Created .arhusrc at ${configPath}`);
   });
 
 if (process.argv.length <= 2) {
@@ -100,4 +100,3 @@ if (process.argv.length <= 2) {
 } else {
   program.parse();
 }
-

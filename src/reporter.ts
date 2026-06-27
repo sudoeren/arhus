@@ -47,8 +47,8 @@ export function sarifReport(results: ScanResult[]): string {
     runs: [{
       tool: {
         driver: {
-          name: 'argus-cli',
-          informationUri: 'https://github.com/anomalyco/argus-cli',
+          name: 'arhus',
+          informationUri: 'https://github.com/sudoeren/arhus',
           rules,
         },
       },

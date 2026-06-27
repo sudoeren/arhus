@@ -1,19 +1,19 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import type { ArgusConfig } from './types';
+import type { ArhusConfig } from './types';
 
-const defaults: ArgusConfig = {
+const defaults: ArhusConfig = {
   include: ['**/*.{ts,tsx,js,jsx}'],
   exclude: ['node_modules/**', 'dist/**', '.git/**', 'coverage/**'],
   rules: {},
 };
 
-export function loadConfig(cwd: string): ArgusConfig {
-  const configPath = resolve(cwd, '.argusrc');
+export function loadConfig(cwd: string): ArhusConfig {
+  const configPath = resolve(cwd, '.arhusrc');
 
   try {
     const raw = readFileSync(configPath, 'utf-8');
-    const user = JSON.parse(raw) as Partial<ArgusConfig>;
+    const user = JSON.parse(raw) as Partial<ArhusConfig>;
 
     return {
       include: user.include ?? defaults.include,

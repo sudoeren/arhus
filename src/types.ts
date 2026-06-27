@@ -38,7 +38,7 @@ export interface ScanResult {
   findings: Finding[];
 }
 
-export interface ArgusConfig {
+export interface ArhusConfig {
   include: string[];
   exclude: string[];
   rules: Record<string, boolean | Record<string, unknown>>;

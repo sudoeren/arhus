@@ -8,11 +8,11 @@ import { getRules } from './rule';
 import { scanFiles } from './scanner';
 import { applyFixes } from './fixer';
 import { terminalReport, jsonReport, sarifReport } from './reporter';
-import type { Finding, ArgusConfig } from './types';
+import type { Finding, ArhusConfig } from './types';
 
 export async function interactiveMode(targetPath?: string) {
   console.log('');
-  console.log('  ' + chalk.bold.cyan('argus') + chalk.dim(' — scan. fix. repeat.'));
+  console.log('  ' + chalk.bold.cyan('arhus') + chalk.dim(' — scan. fix. repeat.'));
   console.log('');
 
   const action = await select({
@@ -20,7 +20,7 @@ export async function interactiveMode(targetPath?: string) {
     choices: [
       { name: 'Scan for vulnerabilities', value: 'scan', description: 'Static analysis' },
       { name: 'Auto-fix detected issues', value: 'fix', description: 'Apply suggested fixes' },
-      { name: 'Create .argusrc', value: 'init', description: 'Configuration file' },
+      { name: 'Create .arhusrc', value: 'init', description: 'Configuration file' },
       new Separator(),
       { name: 'Exit', value: 'exit' },
     ],
@@ -179,7 +179,7 @@ async function interactiveFix(presetPath?: string) {
 
 async function interactiveInit() {
   const apply = await confirm({
-    message: 'Create .argusrc in this directory?',
+    message: 'Create .arhusrc in this directory?',
     default: true,
   });
 
@@ -189,14 +189,14 @@ async function interactiveInit() {
   }
 
   const fs = await import('node:fs');
-  const configPath = resolve(process.cwd(), '.argusrc');
+  const configPath = resolve(process.cwd(), '.arhusrc');
 
   if (fs.existsSync(configPath)) {
-    console.log(chalk.yellow('\n  .argusrc already exists.\n'));
+    console.log(chalk.yellow('\n  .arhusrc already exists.\n'));
     return;
   }
 
-  const defaultConfig: ArgusConfig = {
+  const defaultConfig: ArhusConfig = {
     include: ['**/*.{ts,tsx,js,jsx}'],
     exclude: ['node_modules/**', 'dist/**', '.git/**', 'coverage/**'],
     rules: {},

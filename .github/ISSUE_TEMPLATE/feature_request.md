@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-about: Suggest an idea for argus-cli
+about: Suggest an idea for arhus
 title: '[feature] '
 labels: ['enhancement']
 assignees: []
@@ -10,7 +10,7 @@ assignees: []
 A clear and concise description of what the problem is.
 
 **Describe the solution you'd like**
-What would you like argus-cli to do?
+What would you like arhus to do?
 
 **Describe alternatives you've considered**
 Any alternative solutions or workarounds.
