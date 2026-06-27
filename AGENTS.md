@@ -2,7 +2,7 @@
 
 ## Project: arhus
 
-scan. fix. repeat. — local-first security analysis with TypeScript AST-based auto-fix.
+scan. fix. repeat. — local-first security analysis for TypeScript & JavaScript.
 
 ## Critical Rules
 

@@ -1,5 +1,7 @@
 # Contributing to arhus
 
+arhus is a local-first security scanner for TypeScript & JavaScript.
+
 ## Setup
 
 ```bash
