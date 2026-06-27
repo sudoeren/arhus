@@ -10,6 +10,7 @@ import { debuggerRule } from './debugger';
 import { weakCryptoRule } from './weak-crypto';
 import { unvalidatedRedirectRule } from './unvalidated-redirect';
 import { consoleRule } from './console';
+import { unrestrictedFileUploadRule } from './unrestricted-file-upload';
 
 export function registerAllRules(): void {
   registerRule(hardcodedSecretsRule);
@@ -22,4 +23,5 @@ export function registerAllRules(): void {
   registerRule(weakCryptoRule);
   registerRule(unvalidatedRedirectRule);
   registerRule(consoleRule);
+  registerRule(unrestrictedFileUploadRule);
 }
