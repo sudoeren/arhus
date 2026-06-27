@@ -9,11 +9,10 @@
 ## Install
 
 ```bash
-git clone https://github.com/sudoeren/arhus.git
-cd arhus
-bun install
-bun link
+npm i -g arhus-cli
 ```
+
+
 
 ### AI Agent Skill
 

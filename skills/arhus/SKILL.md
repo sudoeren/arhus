@@ -9,7 +9,7 @@ arhus is a local-first security scanner for TypeScript and JavaScript. It uses A
 
 ## Preconditions
 
-- arhus is installed globally via `bun link` in its own repository.
+- arhus is installed globally via `npm i -g arhus-cli`.
 - Run it from any directory with `arhus scan <path>`.
 - The default config (`.arhusrc`) excludes `node_modules/`, `dist/`, `.git/`, `coverage/`, and test files.
 - Never modify `.arhusrc` unless the user asks.
