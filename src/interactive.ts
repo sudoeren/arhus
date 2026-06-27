@@ -59,11 +59,6 @@ async function interactiveScan(presetPath?: string) {
 
   const results = await scanFiles(cwd, config.include, config.exclude);
   const totalFindings = results.reduce((sum, r) => sum + r.findings.length, 0);
-    color: 'cyan',
-  }).start();
-
-  const results = await scanFiles(cwd, config.include, config.exclude);
-  const totalFindings = results.reduce((sum, r) => sum + r.findings.length, 0);
 
   if (totalFindings === 0) {
     spinner.succeed(chalk.green('No issues found!'));
