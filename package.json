@@ -4,7 +4,7 @@
   "description": "local-first security analysis for TypeScript & JavaScript",
   "type": "module",
   "bin": {
-    "arhus-cli": "./dist/arhus.js"
+    "arhus": "./dist/arhus.js"
   },
   "files": [
     "dist/"

@@ -37,5 +37,7 @@ jobs:
           generate_release_notes: true
 
       - name: Publish to npm
-        run: npm publish --access public
+        run: |
+          npm config set registry https://registry.npmjs.org/
+          npm publish --access public
 
