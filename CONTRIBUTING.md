@@ -6,13 +6,17 @@
 git clone https://github.com/sudoeren/argus-cli.git
 cd argus-cli
 bun install
+bun link
 ```
 
 ## Development
 
 ```bash
-# Run a security scan on the project itself
-bun run bin/argus.ts scan .
+# Interactive mode
+argus-cli
+
+# Scan the project itself
+argus-cli scan .
 
 # Run all tests
 bun test
@@ -45,8 +49,9 @@ bun run build
    ```
 3. Register it in `src/rules/index.ts`:
    ```ts
+   import { registerRule } from '../rule';
    import { myRule } from './my-rule';
-   // ...
+
    registerRule(myRule);
    ```
 4. Write tests in `tests/rules/my-rule.test.ts`

@@ -1,40 +1,62 @@
 # argus-cli
 
-> DevSecOps security scanner — 100% local code analysis with TypeScript AST-based auto-fix.
+> scan. fix. repeat. — local-first security analysis with TypeScript AST-based auto-fix.
 
 ## Install
 
 ```bash
+git clone https://github.com/sudoeren/argus-cli.git
+cd argus-cli
 bun install
+bun link
 ```
 
 ## Usage
 
 ```bash
-# Scan a directory
-bun run bin/argus.ts scan ./src
+# Interactive mode (menu-driven)
+argus-cli
 
-# Auto-fix issues (dry run)
-bun run bin/argus.ts fix ./src --dry-run
+# Scan a directory
+argus-cli scan ./src
+
+# Auto-fix (dry run — preview only)
+argus-cli fix ./src --dry-run
 
 # Apply fixes
-bun run bin/argus.ts fix ./src
+argus-cli fix ./src
 
-# JSON / SARIF output
-bun run bin/argus.ts scan ./src --format json
-bun run bin/argus.ts scan ./src --format sarif
+# JSON output
+argus-cli scan ./src --format json
+
+# SARIF output (GitHub Code Scanning)
+argus-cli scan ./src --format sarif
 
 # Create config file
-bun run bin/argus.ts init
+argus-cli init
 ```
 
 ## Rules
 
-| Rule | Severity |
-|---|---|
-| `no-hardcoded-secrets` | Critical |
-| `no-unsafe-regex` | High |
-| `no-xss-dom` | High |
-| `no-path-traversal` | High |
-| `no-sql-injection` | Critical |
-| `no-command-injection` | Critical |
+| Rule | Severity | Description |
+|---|---|---|
+| `no-hardcoded-secrets` | Critical | API keys, tokens, passwords in source |
+| `no-sql-injection` | Critical | SQL queries via string concatenation |
+| `no-command-injection` | Critical | exec/spawn with dynamic input |
+| `no-xss-dom` | Critical/High | innerHTML, document.write, eval |
+| `no-unsafe-regex` | High | ReDoS patterns, nested quantifiers |
+| `no-path-traversal` | High | File ops with user-controlled paths |
+
+## Configuration
+
+```bash
+argus-cli init   # creates .argusrc.json
+```
+
+```json
+{
+  "include": ["**/*.{ts,tsx,js,jsx}"],
+  "exclude": ["node_modules/**", "dist/**", ".git/**", "coverage/**"],
+  "rules": {}
+}
+```
