@@ -6,6 +6,7 @@ import { xssDomRule } from './xss-dom';
 import { pathTraversalRule } from './path-traversal';
 import { sqlInjectionRule } from './sql-injection';
 import { commandInjectionRule } from './command-injection';
+import { debuggerRule } from './debugger';
 
 export function registerAllRules(): void {
   registerRule(hardcodedSecretsRule);
@@ -14,4 +15,5 @@ export function registerAllRules(): void {
   registerRule(pathTraversalRule);
   registerRule(sqlInjectionRule);
   registerRule(commandInjectionRule);
+  registerRule(debuggerRule);
 }
