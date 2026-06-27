@@ -4,7 +4,7 @@
   "description": "DevSecOps security scanner — 100% local code analysis with TypeScript AST-based auto-fix",
   "type": "module",
   "bin": {
-    "argus": "./bin/argus.ts"
+    "argus-cli": "./bin/argus.ts"
   },
   "files": [
     "bin/",
