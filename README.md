@@ -56,7 +56,7 @@ arhus init   # creates .arhusrc
 ```json
 {
   "include": ["**/*.{ts,tsx,js,jsx}"],
-  "exclude": ["node_modules/**", "dist/**", ".git/**", "coverage/**"],
+  "exclude": ["node_modules/**", "dist/**", ".git/**", "coverage/**", "**/*.test.*", "tests/**"],
   "rules": {}
 }
 ```

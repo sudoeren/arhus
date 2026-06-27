@@ -87,7 +87,7 @@ program
 
     const defaultConfig: ArhusConfig = {
       include: ['**/*.{ts,tsx,js,jsx}'],
-      exclude: ['node_modules/**', 'dist/**', '.git/**', 'coverage/**'],
+      exclude: ['node_modules/**', 'dist/**', '.git/**', 'coverage/**', '**/*.test.*', '**/test/**', 'tests/**'],
       rules: {},
     };
 

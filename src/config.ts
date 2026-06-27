@@ -4,7 +4,7 @@ import type { ArhusConfig } from './types';
 
 const defaults: ArhusConfig = {
   include: ['**/*.{ts,tsx,js,jsx}'],
-  exclude: ['node_modules/**', 'dist/**', '.git/**', 'coverage/**'],
+  exclude: ['node_modules/**', 'dist/**', '.git/**', 'coverage/**', '**/*.test.*', '**/test/**', 'tests/**'],
   rules: {},
 };
 
