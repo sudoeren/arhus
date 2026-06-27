@@ -6,6 +6,7 @@ import { registerAllRules } from '../src/rules/index';
 import { scanFiles } from '../src/scanner';
 import { applyFixes } from '../src/fixer';
 import { terminalReport, jsonReport, sarifReport } from '../src/reporter';
+import { interactiveMode } from '../src/interactive';
 import type { ArgusConfig } from '../src/types';
 
 const program = new Command();
@@ -94,4 +95,9 @@ program
     console.log(`  Created .argusrc.json at ${configPath}`);
   });
 
-program.parse();
+if (process.argv.length <= 2) {
+  interactiveMode();
+} else {
+  program.parse();
+}
+
