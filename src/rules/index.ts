@@ -9,6 +9,7 @@ import { commandInjectionRule } from './command-injection';
 import { debuggerRule } from './debugger';
 import { weakCryptoRule } from './weak-crypto';
 import { unvalidatedRedirectRule } from './unvalidated-redirect';
+import { consoleRule } from './console';
 
 export function registerAllRules(): void {
   registerRule(hardcodedSecretsRule);
@@ -20,4 +21,5 @@ export function registerAllRules(): void {
   registerRule(debuggerRule);
   registerRule(weakCryptoRule);
   registerRule(unvalidatedRedirectRule);
+  registerRule(consoleRule);
 }
