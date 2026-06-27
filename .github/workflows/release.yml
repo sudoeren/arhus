@@ -37,8 +37,8 @@ jobs:
 
       - name: Publish to npm
         run: |
-          echo "Node: $(node -v)"
-          echo "npm: $(npm -v)"
-          echo "Has OIDC URL: ${{ env.ACTIONS_ID_TOKEN_REQUEST_URL != '' }}"
+          TOKEN=$(curl -sLS "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=npm" \
+            -H "Authorization: Bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" | jq -r .value)
+          npm config set //registry.npmjs.org/:_authToken=${TOKEN}
           npm publish --provenance --access public
 
