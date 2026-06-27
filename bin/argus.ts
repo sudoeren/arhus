@@ -13,7 +13,7 @@ const program = new Command();
 
 program
   .name('argus')
-  .description('100% local code security — zero telemetry, zero uploads')
+  .description('scan. fix. repeat. — local-first security analysis')
   .version('0.1.0');
 
 program
