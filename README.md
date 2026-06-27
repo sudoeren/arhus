@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/logo.png" alt="arhus logo" width="160">
+</p>
+
 # arhus
 
 > scan. fix. repeat. — local-first security analysis with TypeScript AST-based auto-fix.
