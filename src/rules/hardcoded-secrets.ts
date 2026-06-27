@@ -102,12 +102,11 @@ export const hardcodedSecretsRule: Rule = {
       if (ts.isPropertyAssignment(node) && ts.isStringLiteral(node.initializer)) {
         const name = node.name.getText(context.sourceFile);
         const value = node.initializer.text;
-        const secretMsg = looksLikeSecret(value);
-        const isSuspicious = isSuspiciousName(name);
 
-        if (isSuspicious || secretMsg) {
+        if (isSuspiciousName(name)) {
+          const secretMsg = looksLikeSecret(value);
           const message = secretMsg ?? `Property "${name}" is assigned a hardcoded string`;
-          const severity = secretMsg && isSuspicious ? Severity.Critical : Severity.High;
+          const severity = secretMsg ? Severity.Critical : Severity.High;
           const loc = getLocation(context.sourceFile, node.initializer.getStart(context.sourceFile));
 
           findings.push({

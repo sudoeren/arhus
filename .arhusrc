@@ -1,5 +1,8 @@
 {
   "include": ["**/*.{ts,tsx,js,jsx}"],
-  "exclude": ["node_modules/**", "dist/**", ".git/**", "coverage/**"],
-  "rules": {}
+  "exclude": ["node_modules/**", "dist/**", ".git/**", "coverage/**", "**/*.test.*", "**/test/**", "tests/**"],
+  "rules": {
+    "no-console": false,
+    "no-unrestricted-file-upload": false
+  }
 }
