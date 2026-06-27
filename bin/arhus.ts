@@ -12,7 +12,7 @@ import type { ArhusConfig } from '../src/types';
 const program = new Command();
 
 program
-  .name('arhus')
+  .name('arhus-cli')
   .description('scan. fix. repeat. — local-first security analysis for TS & JS')
   .version('0.1.0');
 
