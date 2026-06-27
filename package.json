@@ -4,15 +4,14 @@
   "description": "scan. fix. repeat. — local-first security analysis with TypeScript AST-based auto-fix",
   "type": "module",
   "bin": {
-    "arhus": "./bin/arhus.ts"
+    "arhus": "./dist/arhus.js"
   },
   "files": [
-    "bin/",
-    "src/",
-    "tsconfig.json"
+    "dist/"
   ],
   "scripts": {
     "build": "bun build bin/arhus.ts --outdir=dist --target=node",
+    "prepublishOnly": "bun run build && bun test",
     "test": "bun test",
     "test:watch": "bun test --watch"
   },

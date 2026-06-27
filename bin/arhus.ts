@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/usr/bin/env node
 import { Command } from 'commander';
 import { relative, resolve } from 'node:path';
 import { loadConfig } from '../src/config';
