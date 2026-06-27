@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logo.png" alt="arhus logo" width="160">
+  <img src="https://raw.githubusercontent.com/sudoeren/arhus/main/assets/logo.png" alt="arhus logo" width="160">
 </p>
 
 # arhus
