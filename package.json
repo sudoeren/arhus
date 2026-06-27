@@ -1,6 +1,6 @@
 {
   "name": "arhus-cli",
-  "version": "3.0.0",
+  "version": "0.3.0",
   "description": "local-first security analysis for TypeScript & JavaScript",
   "license": "MIT",
   "keywords": [
