@@ -36,5 +36,9 @@ jobs:
           generate_release_notes: true
 
       - name: Publish to npm
-        run: npm publish --provenance --access public
+        run: |
+          echo "Node: $(node -v)"
+          echo "npm: $(npm -v)"
+          echo "Has OIDC URL: ${{ env.ACTIONS_ID_TOKEN_REQUEST_URL != '' }}"
+          npm publish --provenance --access public
 
