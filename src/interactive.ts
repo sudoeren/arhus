@@ -1,6 +1,6 @@
-import { intro, outro, select, text, confirm, multiselect, spinner, note, cancel, isCancel } from '@clack/prompts';
+import { intro, outro, select, confirm, multiselect, spinner, note, cancel, isCancel } from '@clack/prompts';
 import chalk from 'chalk';
-import { resolve } from 'node:path';
+import { resolve, relative } from 'node:path';
 import { loadConfig } from './config';
 import { registerAllRules } from './rules/index';
 import { getRules } from './rule';
@@ -37,24 +37,14 @@ export async function interactiveMode(targetPath?: string) {
 }
 
 async function interactiveScan(presetPath?: string) {
-  const pathInput = await text({
-    message: 'Directory to scan:',
-    placeholder: presetPath ?? '.',
-    defaultValue: presetPath ?? '.',
-  });
-
-  if (isCancel(pathInput)) {
-    cancel('Cancelled');
-    process.exit(0);
-  }
-
-  const cwd = resolve(pathInput as string);
+  const cwd = resolve(presetPath ?? '.');
   const config = loadConfig(cwd);
   registerAllRules();
   const rules = getRules();
 
+  const relPath = relative(process.cwd(), cwd) || '.';
   const s = spinner();
-  s.start(`Scanning with ${rules.length} rules...`);
+  s.start(`Scanning ${relPath} with ${rules.length} rules...`);
 
   const results = await scanFiles(cwd, config.include, config.exclude);
 
@@ -93,24 +83,14 @@ async function interactiveScan(presetPath?: string) {
 }
 
 async function interactiveFix(presetPath?: string) {
-  const pathInput = await text({
-    message: 'Directory to fix:',
-    placeholder: presetPath ?? '.',
-    defaultValue: presetPath ?? '.',
-  });
-
-  if (isCancel(pathInput)) {
-    cancel('Cancelled');
-    process.exit(0);
-  }
-
-  const cwd = resolve(pathInput as string);
+  const cwd = resolve(presetPath ?? '.');
   const config = loadConfig(cwd);
   registerAllRules();
   const rules = getRules();
 
+  const relPath = relative(process.cwd(), cwd) || '.';
   const s = spinner();
-  s.start(`Scanning with ${rules.length} rules...`);
+  s.start(`Scanning ${relPath} with ${rules.length} rules...`);
 
   const results = await scanFiles(cwd, config.include, config.exclude);
   const allFindings: Finding[] = [];
