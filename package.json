@@ -3,6 +3,10 @@
   "version": "0.2.8",
   "description": "local-first security analysis for TypeScript & JavaScript",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sudoeren/arhus"
+  },
   "bin": {
     "arhus": "./dist/arhus.js"
   },
