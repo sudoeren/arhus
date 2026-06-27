@@ -12,7 +12,7 @@
     "tsconfig.json"
   ],
   "scripts": {
-    "start": "bun run index.ts",
+    "start": "bun index.ts",
     "scan": "bun run bin/argus.ts scan",
     "fix": "bun run bin/argus.ts fix",
     "init": "bun run bin/argus.ts init",

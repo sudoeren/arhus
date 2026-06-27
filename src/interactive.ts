@@ -10,7 +10,7 @@ import { terminalReport, jsonReport, sarifReport } from './reporter';
 import type { Finding, ArgusConfig } from './types';
 
 export async function interactiveMode(targetPath?: string) {
-  intro(chalk.bold.cyan('  argus CLI — DevSecOps Security Scanner'));
+  intro(chalk.bold.cyan('  argus — 100% local code security'));
 
   const action = await select({
     message: 'What would you like to do?',
