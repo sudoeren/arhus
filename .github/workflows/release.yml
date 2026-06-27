@@ -40,5 +40,5 @@ jobs:
           TOKEN=$(curl -sLS "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=npm" \
             -H "Authorization: Bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" | jq -r .value)
           npm config set //registry.npmjs.org/:_authToken=${TOKEN}
-          npm publish --provenance --access public
+          npm publish --access public
 
