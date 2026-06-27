@@ -2,7 +2,7 @@ import ts from 'typescript';
 import { Severity } from '../types';
 import type { Rule, RuleContext, Finding } from '../types';
 
-const NESTED_QUANTIFIER = /\([^)]*([+*])\).*\)\s*[+*]/;
+const NESTED_QUANTIFIER = /\([^)]*[+*][^)]*\)\s*[+*]/;
 
 function getLocation(sourceFile: ts.SourceFile, pos: number) {
   const { line, character } = ts.getLineAndCharacterOfPosition(sourceFile, pos);
@@ -35,57 +35,36 @@ export const unsafeRegexRule: Rule = {
     const findings: Finding[] = [];
     const sourceFile = context.sourceFile;
 
+    function pushFinding(pattern: string, start: number, end: number) {
+      const msg = checkRegexPattern(pattern);
+      if (!msg) return;
+
+      const loc = getLocation(sourceFile, start);
+
+      findings.push({
+        ruleId: 'no-unsafe-regex',
+        message: msg,
+        severity: Severity.High,
+        file: context.fileName,
+        line: loc.line,
+        column: loc.column,
+        endLine: loc.line,
+        endColumn: loc.column + (end - start),
+      });
+    }
+
     function walk(node: ts.Node) {
       if (ts.isRegularExpressionLiteral(node)) {
         const pattern = node.text.slice(1, node.text.lastIndexOf('/'));
-        const msg = checkRegexPattern(pattern);
-        if (msg) {
-          const loc = getLocation(sourceFile, node.getStart(sourceFile));
-
-          findings.push({
-            ruleId: 'no-unsafe-regex',
-            message: msg,
-            severity: Severity.High,
-            file: context.fileName,
-            line: loc.line,
-            column: loc.column,
-            endLine: loc.line,
-            endColumn: loc.column + node.text.length,
-          });
-        }
+        pushFinding(pattern, node.getStart(sourceFile), node.getEnd());
       }
 
-      if (ts.isCallExpression(node)) {
-        const callee = node.expression;
-        let isRegexCall = false;
+      if (ts.isCallExpression(node) || ts.isNewExpression(node)) {
+        const callee = ts.isCallExpression(node) ? node.expression : node.expression;
 
-        if (ts.isIdentifier(callee) && callee.text === 'RegExp') {
-          isRegexCall = true;
-        } else if (ts.isPropertyAccessExpression(callee) &&
-          callee.expression.kind === ts.SyntaxKind.RegExpKeyword &&
-          callee.name.text === 'RegExp') {
-          isRegexCall = true;
-        } else if (ts.isNewExpression(node) && ts.isIdentifier(node.expression) && node.expression.text === 'RegExp') {
-          isRegexCall = true;
-        }
-
-        if (isRegexCall && node.arguments.length > 0 && ts.isStringLiteral(node.arguments[0])) {
-          const pattern = node.arguments[0].text;
-          const msg = checkRegexPattern(pattern);
-          if (msg) {
-            const loc = getLocation(sourceFile, node.arguments[0].getStart(sourceFile));
-
-            findings.push({
-              ruleId: 'no-unsafe-regex',
-              message: msg,
-              severity: Severity.High,
-              file: context.fileName,
-              line: loc.line,
-              column: loc.column,
-              endLine: loc.line,
-              endColumn: loc.column + pattern.length + 2,
-            });
-          }
+        if (ts.isIdentifier(callee) && callee.text === 'RegExp' && node.arguments.length > 0 && ts.isStringLiteral(node.arguments[0])) {
+          const arg = node.arguments[0];
+          pushFinding(arg.text, arg.getStart(sourceFile), arg.getEnd());
         }
       }
 

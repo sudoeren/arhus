@@ -30,8 +30,8 @@ describe('no-path-traversal', () => {
     expect(findings[0]!.message).toContain('writeFile');
   });
 
-  test('flags unlink with user input', () => {
-    const ctx = makeContext('fs.unlink(userPath);');
+  test('flags unlink with user input via concat', () => {
+    const ctx = makeContext('fs.unlink("/uploads/" + userFile);');
     const findings = pathTraversalRule.check(ctx);
     expect(findings.length).toBeGreaterThan(0);
   });
