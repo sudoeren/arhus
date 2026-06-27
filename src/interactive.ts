@@ -1,7 +1,7 @@
 import { select, checkbox, confirm, Separator } from '@inquirer/prompts';
 import chalk from 'chalk';
 import ora from 'ora';
-import { resolve, relative } from 'node:path';
+import { resolve } from 'node:path';
 import { loadConfig } from './config';
 import { registerAllRules } from './rules/index';
 import { getRules } from './rule';
@@ -40,10 +40,8 @@ async function interactiveScan(presetPath?: string) {
   const config = loadConfig(cwd);
   registerAllRules();
   const rules = getRules();
-  const relPath = relative(process.cwd(), cwd) || '.';
-
   const spinner = ora({
-    text: chalk.dim(`Scanning ${relPath} with ${rules.length} rules...`),
+    text: chalk.dim(`Scanning ${cwd} with ${rules.length} rules...`),
     color: 'cyan',
   }).start();
 
@@ -84,10 +82,8 @@ async function interactiveFix(presetPath?: string) {
   const config = loadConfig(cwd);
   registerAllRules();
   const rules = getRules();
-  const relPath = relative(process.cwd(), cwd) || '.';
-
   const spinner = ora({
-    text: chalk.dim(`Scanning ${relPath} with ${rules.length} rules...`),
+    text: chalk.dim(`Scanning ${cwd} with ${rules.length} rules...`),
     color: 'cyan',
   }).start();
 
