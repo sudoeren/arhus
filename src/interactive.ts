@@ -1,5 +1,6 @@
-import { intro, outro, select, confirm, multiselect, spinner, note, cancel, isCancel } from '@clack/prompts';
+import { select, checkbox, confirm, Separator } from '@inquirer/prompts';
 import chalk from 'chalk';
+import ora from 'ora';
 import { resolve, relative } from 'node:path';
 import { loadConfig } from './config';
 import { registerAllRules } from './rules/index';
@@ -10,22 +11,20 @@ import { terminalReport, jsonReport, sarifReport } from './reporter';
 import type { Finding, ArgusConfig } from './types';
 
 export async function interactiveMode(targetPath?: string) {
-  intro(chalk.bold.cyan('  argus — scan. fix. repeat.'));
+  console.log('');
+  console.log('  ' + chalk.bold.cyan('argus') + chalk.dim(' — scan. fix. repeat.'));
+  console.log('');
 
   const action = await select({
     message: 'What would you like to do?',
-    options: [
-      { value: 'scan', label: ' Scan for vulnerabilities', hint: 'static analysis' },
-      { value: 'fix', label: ' Auto-fix detected issues', hint: 'apply suggested fixes' },
-      { value: 'init', label: ' Create .argusrc.json', hint: 'configuration file' },
-      { value: 'exit', label: ' Exit', hint: '' },
+    choices: [
+      { name: 'Scan for vulnerabilities', value: 'scan', description: 'Static analysis' },
+      { name: 'Auto-fix detected issues', value: 'fix', description: 'Apply suggested fixes' },
+      { name: 'Create .argusrc.json', value: 'init', description: 'Configuration file' },
+      new Separator(),
+      { name: 'Exit', value: 'exit' },
     ],
   });
-
-  if (isCancel(action) || action === 'exit') {
-    cancel('Goodbye!');
-    process.exit(0);
-  }
 
   if (action === 'scan') {
     await interactiveScan(targetPath);
@@ -41,37 +40,35 @@ async function interactiveScan(presetPath?: string) {
   const config = loadConfig(cwd);
   registerAllRules();
   const rules = getRules();
-
   const relPath = relative(process.cwd(), cwd) || '.';
-  const s = spinner();
-  s.start(`Scanning ${relPath} with ${rules.length} rules...`);
+
+  const spinner = ora({
+    text: chalk.dim(`Scanning ${relPath} with ${rules.length} rules...`),
+    color: 'cyan',
+  }).start();
 
   const results = await scanFiles(cwd, config.include, config.exclude);
-
   const totalFindings = results.reduce((sum, r) => sum + r.findings.length, 0);
-  s.stop(totalFindings === 0 ? 'No issues found!' : `Found ${totalFindings} issue${totalFindings !== 1 ? 's' : ''}`);
 
   if (totalFindings === 0) {
-    note(chalk.green('  Your code looks secure!'), 'Result');
-    outro('Done!');
+    spinner.succeed(chalk.green('No issues found!'));
+    console.log('');
     return;
   }
+
+  spinner.info(`Found ${totalFindings} issue${totalFindings !== 1 ? 's' : ''}`);
+  console.log('');
 
   console.log(terminalReport(results));
 
   const format = await select({
     message: 'Export results?',
-    options: [
-      { value: 'none', label: ' Done', hint: 'finish' },
-      { value: 'json', label: ' Export as JSON', hint: '' },
-      { value: 'sarif', label: ' Export as SARIF', hint: 'GitHub Code Scanning' },
+    choices: [
+      { name: 'Done', value: 'none' },
+      { name: 'Export as JSON', value: 'json' },
+      { name: 'Export as SARIF', value: 'sarif' },
     ],
   });
-
-  if (isCancel(format) || format === 'none') {
-    outro('Done!');
-    return;
-  }
 
   if (format === 'json') {
     console.log(jsonReport(results));
@@ -79,7 +76,7 @@ async function interactiveScan(presetPath?: string) {
     console.log(sarifReport(results));
   }
 
-  outro('Done!');
+  console.log('');
 }
 
 async function interactiveFix(presetPath?: string) {
@@ -87,10 +84,12 @@ async function interactiveFix(presetPath?: string) {
   const config = loadConfig(cwd);
   registerAllRules();
   const rules = getRules();
-
   const relPath = relative(process.cwd(), cwd) || '.';
-  const s = spinner();
-  s.start(`Scanning ${relPath} with ${rules.length} rules...`);
+
+  const spinner = ora({
+    text: chalk.dim(`Scanning ${relPath} with ${rules.length} rules...`),
+    color: 'cyan',
+  }).start();
 
   const results = await scanFiles(cwd, config.include, config.exclude);
   const allFindings: Finding[] = [];
@@ -101,55 +100,46 @@ async function interactiveFix(presetPath?: string) {
     }
   }
 
-  const fixableCount = allFindings.filter(f => f.suggestion).length;
-  s.stop(`Found ${allFindings.length} issue${allFindings.length !== 1 ? 's' : ''}, ${fixableCount} fixable`);
+  const fixable = allFindings.filter(f => f.suggestion);
+  spinner.info(`Found ${allFindings.length} issue${allFindings.length !== 1 ? 's' : ''}, ${fixable.length} fixable`);
 
   if (allFindings.length === 0) {
-    note(chalk.green('  No issues to fix!'), 'Result');
-    outro('Done!');
+    console.log(chalk.green('\n  No issues to fix!\n'));
     return;
   }
 
+  console.log('');
   console.log(terminalReport(results));
 
-  if (fixableCount === 0) {
-    note('No auto-fix suggestions available for these findings.', 'Warning');
-    outro('Done!');
+  if (fixable.length === 0) {
+    console.log(chalk.yellow('  No auto-fix suggestions available.\n'));
     return;
   }
 
-  const choices = allFindings
-    .filter(f => f.suggestion)
-    .map(f => ({
-      value: f,
-      label: `[${f.ruleId}] ${f.file}:${f.line} — ${f.message}`,
-      hint: f.suggestion ?? '',
-    }));
+  const choices = fixable.map(f => ({
+    name: `[${f.ruleId}] ${f.file}:${f.line}  ${chalk.dim(f.suggestion ?? '')}`,
+    value: f,
+    checked: true,
+  }));
 
-  const selected = await multiselect({
+  const selected = await checkbox({
     message: 'Select findings to auto-fix:',
-    options: choices,
-    required: false,
+    choices,
   });
 
-  if (isCancel(selected)) {
-    cancel('Cancelled');
-    process.exit(0);
-  }
-
-  if (!selected || selected.length === 0) {
-    note('No findings selected.', 'Info');
-    outro('Done!');
+  if (selected.length === 0) {
+    console.log(chalk.dim('\n  Nothing selected.\n'));
     return;
   }
 
   const apply = await confirm({
     message: `Apply ${selected.length} fix${selected.length !== 1 ? 'es' : ''}?`,
+    default: false,
   });
 
-  if (isCancel(apply) || !apply) {
-    cancel('Cancelled');
-    process.exit(0);
+  if (!apply) {
+    console.log(chalk.dim('\n  Cancelled.\n'));
+    return;
   }
 
   const absoluteFindings = (selected as Finding[]).map(f => ({
@@ -159,30 +149,30 @@ async function interactiveFix(presetPath?: string) {
 
   const fixResults = applyFixes(absoluteFindings, false);
 
+  console.log('');
   for (const fr of fixResults) {
     console.log(`  ${chalk.green('✓')} ${fr.file}: ${fr.fixed} fixed, ${fr.skipped} skipped`);
   }
 
-  note('Fixes applied! Review the changes before committing.', 'Success');
-  outro('Done!');
+  console.log(chalk.green('\n  Fixes applied! Review changes before committing.\n'));
 }
 
 async function interactiveInit() {
-  const confirmCreate = await confirm({
-    message: 'Create .argusrc.json in the current directory?',
+  const apply = await confirm({
+    message: 'Create .argusrc.json in this directory?',
+    default: true,
   });
 
-  if (isCancel(confirmCreate) || !confirmCreate) {
-    cancel('Cancelled');
-    process.exit(0);
+  if (!apply) {
+    console.log(chalk.dim('\n  Cancelled.\n'));
+    return;
   }
 
   const fs = await import('node:fs');
   const configPath = resolve(process.cwd(), '.argusrc.json');
 
   if (fs.existsSync(configPath)) {
-    note('.argusrc.json already exists.', 'Warning');
-    outro('Done!');
+    console.log(chalk.yellow('\n  .argusrc.json already exists.\n'));
     return;
   }
 
@@ -193,6 +183,5 @@ async function interactiveInit() {
   };
 
   fs.writeFileSync(configPath, JSON.stringify(defaultConfig, null, 2), 'utf-8');
-  note(`Created ${configPath}`, 'Success');
-  outro('Done!');
+  console.log(chalk.green(`\n  Created ${configPath}\n`));
 }
