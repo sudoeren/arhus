@@ -15,6 +15,12 @@ bun install
 bun link
 ```
 
+### AI Agent Skill
+
+```bash
+npx skills add sudoeren/arhus
+```
+
 ## Usage
 
 ```bash
