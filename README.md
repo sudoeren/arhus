@@ -4,7 +4,7 @@
 
 # arhus
 
-> scan. fix. repeat. — local-first security analysis for TypeScript & JavaScript.
+> scan. fix. repeat. local-first security analysis for TypeScript & JavaScript.
 
 ## Install
 
