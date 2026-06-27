@@ -75,13 +75,13 @@ program
 
 program
   .command('init')
-  .description('Create a default .argusrc.json configuration file')
+  .description('Create a default .argusrc configuration file')
   .action(async () => {
     const fs = await import('node:fs');
-    const configPath = resolve(process.cwd(), '.argusrc.json');
+    const configPath = resolve(process.cwd(), '.argusrc');
 
     if (fs.existsSync(configPath)) {
-      console.log(`  .argusrc.json already exists at ${configPath}`);
+      console.log(`  .argusrc already exists at ${configPath}`);
       return;
     }
 
@@ -92,7 +92,7 @@ program
     };
 
     fs.writeFileSync(configPath, JSON.stringify(defaultConfig, null, 2), 'utf-8');
-    console.log(`  Created .argusrc.json at ${configPath}`);
+    console.log(`  Created .argusrc at ${configPath}`);
   });
 
 if (process.argv.length <= 2) {

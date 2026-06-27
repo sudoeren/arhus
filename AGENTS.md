@@ -23,6 +23,6 @@ scan. fix. repeat. — local-first security analysis with TypeScript AST-based a
 | `argus-cli` | Interactive mode |
 | `argus-cli scan <path>` | Security scan |
 | `argus-cli fix <path>` | Auto-fix |
-| `argus-cli init` | Create .argusrc.json |
+| `argus-cli init` | Create .argusrc |
 | `bun test` | Run tests |
 | `bun run build` | Build for Node.js |

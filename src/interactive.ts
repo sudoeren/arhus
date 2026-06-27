@@ -20,7 +20,7 @@ export async function interactiveMode(targetPath?: string) {
     choices: [
       { name: 'Scan for vulnerabilities', value: 'scan', description: 'Static analysis' },
       { name: 'Auto-fix detected issues', value: 'fix', description: 'Apply suggested fixes' },
-      { name: 'Create .argusrc.json', value: 'init', description: 'Configuration file' },
+      { name: 'Create .argusrc', value: 'init', description: 'Configuration file' },
       new Separator(),
       { name: 'Exit', value: 'exit' },
     ],
@@ -179,7 +179,7 @@ async function interactiveFix(presetPath?: string) {
 
 async function interactiveInit() {
   const apply = await confirm({
-    message: 'Create .argusrc.json in this directory?',
+    message: 'Create .argusrc in this directory?',
     default: true,
   });
 
@@ -189,10 +189,10 @@ async function interactiveInit() {
   }
 
   const fs = await import('node:fs');
-  const configPath = resolve(process.cwd(), '.argusrc.json');
+  const configPath = resolve(process.cwd(), '.argusrc');
 
   if (fs.existsSync(configPath)) {
-    console.log(chalk.yellow('\n  .argusrc.json already exists.\n'));
+    console.log(chalk.yellow('\n  .argusrc already exists.\n'));
     return;
   }
 

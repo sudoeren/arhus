@@ -9,7 +9,7 @@ const defaults: ArgusConfig = {
 };
 
 export function loadConfig(cwd: string): ArgusConfig {
-  const configPath = resolve(cwd, '.argusrc.json');
+  const configPath = resolve(cwd, '.argusrc');
 
   try {
     const raw = readFileSync(configPath, 'utf-8');

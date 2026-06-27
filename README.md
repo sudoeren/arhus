@@ -50,7 +50,7 @@ argus-cli init
 ## Configuration
 
 ```bash
-argus-cli init   # creates .argusrc.json
+argus-cli init   # creates .argusrc
 ```
 
 ```json
