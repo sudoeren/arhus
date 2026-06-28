@@ -4,7 +4,7 @@
 
 # arhus
 
-> scan. fix. repeat. local-first security analysis for TypeScript & JavaScript.
+<p align="center"><b>scan. fix. repeat.</b> — local-first security analysis for TypeScript & JavaScript.</p>
 
 <p align="center">
   <a href="https://www.npmjs.com/package/arhus-cli"><img src="https://img.shields.io/npm/dt/arhus-cli?label=total%20downloads" alt="npm total downloads"></a>
