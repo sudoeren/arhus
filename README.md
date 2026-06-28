@@ -6,6 +6,12 @@
 
 > scan. fix. repeat. local-first security analysis for TypeScript & JavaScript.
 
+<p align="center">
+  <a href="https://www.npmjs.com/package/arhus-cli"><img src="https://img.shields.io/npm/dt/arhus-cli?label=total%20downloads" alt="npm total downloads"></a>
+  <a href="https://www.npmjs.com/package/arhus-cli"><img src="https://img.shields.io/npm/v/arhus-cli" alt="npm version"></a>
+
+</p>
+
 ## Install
 
 ```bash
@@ -56,6 +62,10 @@ arhus init
 | `no-unsafe-regex` | High | ReDoS patterns, nested quantifiers |
 | `no-path-traversal` | High | File ops with user-controlled paths |
 
+## Why arhus
+
+arhus runs **entirely offline**. No telemetry, no cloud, no API calls. Your source code never leaves your machine. Unlike ESLint plugins that focus on style and surface-level patterns, arhus performs AST-aware semantic checks — tracing taint from user input through function calls — without the overhead of a full SAST platform.
+
 ## Configuration
 
 ```bash
@@ -81,3 +91,7 @@ arhus init   # creates .arhusrc
 | `false` | Rule is disabled |
 | `"low"`, `"medium"`, `"high"`, `"critical"` | Override severity |
 | `{ "severity": "high" }` | Object form with severity override + future options |
+
+## License
+
+MIT — see [LICENSE](LICENSE) for details.
