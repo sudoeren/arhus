@@ -12,6 +12,10 @@
 
 </p>
 
+## Why arhus
+
+arhus runs **entirely offline**. No telemetry, no cloud, no API calls. Your source code never leaves your machine. Unlike ESLint plugins that focus on style and surface-level patterns, arhus performs AST-aware semantic checks — tracing taint from user input through function calls — without the overhead of a full SAST platform.
+
 ## Install
 
 ```bash
@@ -61,10 +65,6 @@ arhus init
 | `no-xss-dom` | Critical/High | innerHTML, document.write, eval |
 | `no-unsafe-regex` | High | ReDoS patterns, nested quantifiers |
 | `no-path-traversal` | High | File ops with user-controlled paths |
-
-## Why arhus
-
-arhus runs **entirely offline**. No telemetry, no cloud, no API calls. Your source code never leaves your machine. Unlike ESLint plugins that focus on style and surface-level patterns, arhus performs AST-aware semantic checks — tracing taint from user input through function calls — without the overhead of a full SAST platform.
 
 ## Configuration
 
