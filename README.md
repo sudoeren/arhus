@@ -92,6 +92,14 @@ arhus init   # creates .arhusrc
 | `"low"`, `"medium"`, `"high"`, `"critical"` | Override severity |
 | `{ "severity": "high" }` | Object form with severity override + future options |
 
+## Uninstall
+
+```bash
+npm uninstall -g arhus-cli
+```
+
+Project-level `.arhusrc` files are not removed automatically.
+
 ## License
 
 MIT — see [LICENSE](LICENSE) for details.
