@@ -62,9 +62,14 @@ arhus init
 | `no-hardcoded-secrets` | Critical | API keys, tokens, passwords in source |
 | `no-sql-injection` | Critical | SQL queries via string concatenation |
 | `no-command-injection` | Critical | exec/spawn with dynamic input |
-| `no-xss-dom` | Critical/High | innerHTML, document.write, eval |
+| `no-xss-dom` | High | innerHTML, document.write, eval |
 | `no-unsafe-regex` | High | ReDoS patterns, nested quantifiers |
 | `no-path-traversal` | High | File ops with user-controlled paths |
+| `no-unvalidated-redirect` | High | Open redirect via user-controlled input |
+| `no-unrestricted-file-upload` | High | File upload without extension validation |
+| `no-weak-crypto` | High | MD5, SHA1, DES, RC4 usage |
+| `no-debugger` | High | debugger statements in committed code |
+| `no-console` | Info | console.log and similar in production |
 
 ## Configuration
 
