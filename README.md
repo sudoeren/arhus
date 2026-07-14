@@ -49,14 +49,11 @@ arhus scan ./src --format json
 # SARIF output (GitHub Code Scanning)
 arhus scan ./src --format sarif
 
-# Show version and rule summary
-arhus about
-
 # Create config file
 arhus init
 ```
 
-## Rules (20)
+## Rules
 
 | Rule | Severity | Description |
 |---|---|---|
@@ -80,15 +77,6 @@ arhus init
 | `no-insecure-http` | Medium | Plain HTTP instead of HTTPS |
 | `no-stack-trace-leak` | Medium | Error stack traces sent to client |
 | `no-console` | Info | console.log and similar in production |
-
-### Suppress Findings
-
-```typescript
-const password = "admin123"; // arhus-ignore-line
-const token = "ghp_abc123def456"; // arhus-ignore-line: no-hardcoded-secrets
-```
-
-Use `// arhus-ignore-line` to skip all findings on a line, or `// arhus-ignore-line: rule-id` to skip a specific rule.
 
 ## Configuration
 
