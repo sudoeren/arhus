@@ -11,6 +11,15 @@ import { weakCryptoRule } from './weak-crypto';
 import { unvalidatedRedirectRule } from './unvalidated-redirect';
 import { consoleRule } from './console';
 import { unrestrictedFileUploadRule } from './unrestricted-file-upload';
+import { prototypePollutionRule } from './prototype-pollution';
+import { nosqlInjectionRule } from './nosql-injection';
+import { ssrfRule } from './ssrf';
+import { insecureHttpRule } from './insecure-http';
+import { weakCertValidationRule } from './weak-cert-validation';
+import { insecureRandomnessRule } from './insecure-randomness';
+import { insecureDeserializationRule } from './insecure-deserialization';
+import { corsMisconfigurationRule } from './cors-misconfiguration';
+import { stackTraceLeakRule } from './stack-trace-leak';
 
 export function registerAllRules(): void {
   registerRule(hardcodedSecretsRule);
@@ -24,4 +33,13 @@ export function registerAllRules(): void {
   registerRule(unvalidatedRedirectRule);
   registerRule(consoleRule);
   registerRule(unrestrictedFileUploadRule);
+  registerRule(prototypePollutionRule);
+  registerRule(nosqlInjectionRule);
+  registerRule(ssrfRule);
+  registerRule(insecureHttpRule);
+  registerRule(weakCertValidationRule);
+  registerRule(insecureRandomnessRule);
+  registerRule(insecureDeserializationRule);
+  registerRule(corsMisconfigurationRule);
+  registerRule(stackTraceLeakRule);
 }

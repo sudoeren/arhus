@@ -12,8 +12,6 @@ const EVIL_PATTERNS: { pattern: RegExp; message: string }[] = [
   { pattern: /\(S.\|[^)]+\)\+/, message: 'Regex has repeating alternation group, consider ReDoS risk' },
 ];
 
-const POLYNOMIAL_PATTERN = /\$[a-z]+\[[a-z]+\]/;
-
 function checkRegexPattern(pattern: string): string | null {
   for (const { pattern: re, message } of EVIL_PATTERNS) {
     if (re.test(pattern)) {
@@ -87,10 +85,13 @@ export const unsafeRegexRule: Rule = {
 
       if (ts.isCallExpression(node) || ts.isNewExpression(node)) {
         const callee = ts.isCallExpression(node) ? node.expression : node.expression;
+        const args = node.arguments;
 
-        if (ts.isIdentifier(callee) && callee.text === 'RegExp' && node.arguments.length > 0 && ts.isStringLiteral(node.arguments[0])) {
-          const arg = node.arguments[0];
-          pushFinding(arg.text, arg.getStart(sourceFile), arg.getEnd());
+        if (args && args.length > 0 && ts.isIdentifier(callee) && callee.text === 'RegExp') {
+          const firstArg = args[0];
+          if (firstArg && ts.isStringLiteral(firstArg)) {
+            pushFinding(firstArg.text, firstArg.getStart(sourceFile), firstArg.getEnd());
+          }
         }
       }
 

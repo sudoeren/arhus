@@ -32,13 +32,11 @@ export function getActiveRules(config: ArhusConfig): Rule[] {
       if (!setting || setting === true) return rule;
 
       let severity: Severity | undefined;
-      let options: RuleOptions | undefined;
 
       if (typeof setting === 'string') {
         severity = setting as Severity;
       } else if (typeof setting === 'object') {
-        severity = setting.severity;
-        options = setting;
+        severity = (setting as RuleOptions).severity;
       }
 
       if (severity) {

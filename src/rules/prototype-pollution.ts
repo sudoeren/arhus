@@ -1,0 +1,111 @@
+import ts from 'typescript';
+import { Severity } from '../types';
+import type { Rule, RuleContext, Finding } from '../types';
+import { getLocation } from '../utils';
+
+const DANGEROUS_MERGE_PATTERNS = [
+  'Object.assign',
+  '_.merge',
+  '_.extend',
+  '_.assign',
+  '$.extend',
+  'merge',
+  'deepMerge',
+  'deepmerge',
+  'mergeDeep',
+];
+
+export const prototypePollutionRule: Rule = {
+  id: 'no-prototype-pollution',
+  name: 'No Prototype Pollution',
+  description: 'Detects unsafe object merge/assign operations that can lead to prototype pollution.',
+  severity: Severity.High,
+  check(context: RuleContext): Finding[] {
+    const findings: Finding[] = [];
+    const sourceFile = context.sourceFile;
+
+    function walk(node: ts.Node) {
+      if (ts.isCallExpression(node)) {
+        const callee = node.expression;
+        let calleeText = '';
+
+        if (ts.isPropertyAccessExpression(callee)) {
+          calleeText = callee.name.text;
+        } else if (ts.isIdentifier(callee)) {
+          calleeText = callee.text;
+        }
+
+        if (calleeText && DANGEROUS_MERGE_PATTERNS.some(p => calleeText.includes(p))) {
+          const hasDynamicTarget = node.arguments.length > 0 && (
+            ts.isIdentifier(node.arguments[0]!) ||
+            ts.isCallExpression(node.arguments[0]!) ||
+            ts.isPropertyAccessExpression(node.arguments[0]!)
+          );
+
+          if (hasDynamicTarget) {
+            const span = callee.getStart(sourceFile);
+            const loc = getLocation(sourceFile, span);
+
+            findings.push({
+              ruleId: 'no-prototype-pollution',
+              message: `"${calleeText}()" can cause prototype pollution if merging untrusted objects`,
+              severity: Severity.High,
+              file: context.fileName,
+              line: loc.line,
+              column: loc.column,
+              endLine: loc.line,
+              endColumn: loc.column + calleeText.length,
+              suggestion: 'Use Object.create(null) for maps, or validate keys against "__proto__", "constructor", "prototype"',
+            });
+          }
+        }
+
+        if (ts.isPropertyAccessExpression(callee) && callee.name.text === 'from' && ts.isIdentifier(callee.expression)) {
+          if (callee.expression.text === 'Object' && node.arguments.length > 0) {
+            const span = callee.getStart(sourceFile);
+            const loc = getLocation(sourceFile, span);
+
+            findings.push({
+              ruleId: 'no-prototype-pollution',
+              message: 'Dynamic key assignment with Object.fromEntries() can lead to prototype pollution',
+              severity: Severity.High,
+              file: context.fileName,
+              line: loc.line,
+              column: loc.column,
+              endLine: loc.line,
+              endColumn: loc.column + 4,
+              suggestion: 'Use a Map or Object.create(null) instead',
+            });
+          }
+        }
+      }
+
+      if (ts.isBinaryExpression(node) && node.operatorToken.kind === ts.SyntaxKind.EqualsToken) {
+        if (ts.isPropertyAccessExpression(node.left)) {
+          const prop = node.left;
+          if ((prop.name.text === '__proto__' || prop.name.text === 'prototype') &&
+              ts.isPropertyAccessExpression(prop.expression)) {
+            const span = prop.name.getStart(sourceFile);
+            const loc = getLocation(sourceFile, span);
+
+            findings.push({
+              ruleId: 'no-prototype-pollution',
+              message: `Direct assignment to "${prop.name.text}" is a prototype pollution vector`,
+              severity: Severity.Critical,
+              file: context.fileName,
+              line: loc.line,
+              column: loc.column,
+              endLine: loc.line,
+              endColumn: loc.column + prop.name.text.length,
+            });
+          }
+        }
+      }
+
+      ts.forEachChild(node, walk);
+    }
+
+    walk(sourceFile);
+    return findings;
+  },
+};

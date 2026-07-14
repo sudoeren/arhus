@@ -98,9 +98,10 @@ export const xssDomRule: Rule = {
         const methodName = ts.isPropertyAccessExpression(callee) ? callee.name.text : '';
 
         if ((globalName === 'setTimeout' || globalName === 'setInterval' || methodName === 'setTimeout' || methodName === 'setInterval')) {
-          if (node.arguments.length > 0 && ts.isStringLiteral(node.arguments[0])) {
+          const firstArg = node.arguments[0];
+          if (firstArg && ts.isStringLiteral(firstArg)) {
             const name = globalName || methodName;
-            const span = ts.isPropertyAccessExpression(callee) ? callee.name.getStart(sourceFile) : callee.getStart(sourceFile);
+            const span = ts.isPropertyAccessExpression(callee) ? (callee as ts.PropertyAccessExpression).name.getStart(sourceFile) : callee.getStart(sourceFile);
             const loc = getLocation(sourceFile, span);
 
             findings.push({
@@ -117,8 +118,8 @@ export const xssDomRule: Rule = {
           }
         }
 
-        if (methodName === 'insertAdjacentHTML') {
-          const span = callee.name.getStart(sourceFile);
+        if (methodName === 'insertAdjacentHTML' && ts.isPropertyAccessExpression(node.expression)) {
+          const span = node.expression.name.getStart(sourceFile);
           const loc = getLocation(sourceFile, span);
 
           findings.push({

@@ -45,16 +45,16 @@ export function validateConfig(raw: string, configPath: string): string[] {
     }
   }
 
-  if (parsed.include !== undefined && !Array.isArray(parsed.include)) {
+  if (parsed['include'] !== undefined && !Array.isArray(parsed['include'])) {
     warnings.push(`${configPath}: "include" must be an array of glob patterns`);
   }
 
-  if (parsed.exclude !== undefined && !Array.isArray(parsed.exclude)) {
+  if (parsed['exclude'] !== undefined && !Array.isArray(parsed['exclude'])) {
     warnings.push(`${configPath}: "exclude" must be an array of glob patterns`);
   }
 
-  if (parsed.rules !== undefined && typeof parsed.rules === 'object' && !Array.isArray(parsed.rules)) {
-    const rulesConfig = parsed.rules as Record<string, unknown>;
+  if (parsed['rules'] !== undefined && typeof parsed['rules'] === 'object' && !Array.isArray(parsed['rules'])) {
+    const rulesConfig = parsed['rules'] as Record<string, unknown>;
     for (const [ruleId, setting] of Object.entries(rulesConfig)) {
       if (setting === false || setting === true) continue;
       if (typeof setting === 'string') {
@@ -65,8 +65,8 @@ export function validateConfig(raw: string, configPath: string): string[] {
       }
       if (typeof setting === 'object' && setting !== null) {
         const ruleOpts = setting as Record<string, unknown>;
-        if (ruleOpts.severity !== undefined && !Object.values(Severity).includes(ruleOpts.severity as Severity)) {
-          warnings.push(`${configPath}: Invalid severity "${ruleOpts.severity}" for rule "${ruleId}"`);
+        if (ruleOpts['severity'] !== undefined && !Object.values(Severity).includes(ruleOpts['severity'] as Severity)) {
+          warnings.push(`${configPath}: Invalid severity "${String(ruleOpts['severity'])}" for rule "${ruleId}"`);
         }
         continue;
       }

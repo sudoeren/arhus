@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import type { ScanResult, Finding } from './types';
+import type { ScanResult } from './types';
 import { Severity } from './types';
 
 const severityIcon: Record<Severity, string> = {
