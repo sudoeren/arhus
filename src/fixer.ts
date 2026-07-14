@@ -25,9 +25,10 @@ export function applyFixes(findings: Finding[], dryRun: boolean): FixResult[] {
     try {
       let source = readFileSync(file, 'utf-8');
 
-      const sorted = fileFindings
-        .filter(f => f.suggestion)
-        .sort((a, b) => (b.line - a.line) || (b.column - a.column));
+      const withSuggestions = fileFindings.filter(f => f.suggestion);
+      skipped += fileFindings.length - withSuggestions.length;
+
+      const sorted = withSuggestions.sort((a, b) => (b.line - a.line) || (b.column - a.column));
 
       for (const finding of sorted) {
         const lines = source.split('\n');
@@ -42,26 +43,10 @@ export function applyFixes(findings: Finding[], dryRun: boolean): FixResult[] {
         const startCol = finding.column - 1;
         const endCol = (finding.endColumn ?? startCol + 1) - 1;
 
-        if (startLineIdx === endLineIdx) {
-          const line = lines[startLineIdx]!;
-          if (startCol > line.length || endCol > line.length) {
-            skipped++;
-            continue;
-          }
-          lines[startLineIdx] = line.slice(0, startCol) + finding.suggestion! + line.slice(endCol);
-        } else {
-          const firstLine = lines[startLineIdx]!;
-          const lastLine = lines[endLineIdx]!;
-          if (startCol > firstLine.length || endCol > lastLine.length) {
-            skipped++;
-            continue;
-          }
-          lines[startLineIdx] = firstLine.slice(0, startCol) + finding.suggestion!;
-          lines[endLineIdx] = lastLine.slice(endCol);
-          for (let i = startLineIdx + 1; i < endLineIdx; i++) {
-            lines[i] = '';
-          }
-        }
+        const beforeText = lines[startLineIdx]!.slice(0, startCol);
+        const afterText = lines[endLineIdx]!.slice(endCol);
+
+        lines.splice(startLineIdx, endLineIdx - startLineIdx + 1, beforeText + finding.suggestion! + afterText);
 
         source = lines.join('\n');
         fixed++;
