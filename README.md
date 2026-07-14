@@ -22,6 +22,8 @@ arhus runs **entirely offline**. No telemetry, no cloud, no API calls. Your sour
 npm i -g arhus-cli
 ```
 
+
+
 ### AI Agent Skill
 
 ```bash
@@ -49,46 +51,25 @@ arhus scan ./src --format json
 # SARIF output (GitHub Code Scanning)
 arhus scan ./src --format sarif
 
-# Show version and rule summary
-arhus about
-
 # Create config file
 arhus init
 ```
 
-## Rules (20)
+## Rules
 
 | Rule | Severity | Description |
 |---|---|---|
 | `no-hardcoded-secrets` | Critical | API keys, tokens, passwords in source |
 | `no-sql-injection` | Critical | SQL queries via string concatenation |
 | `no-command-injection` | Critical | exec/spawn with dynamic input |
-| `no-nosql-injection` | Critical | MongoDB query injection ($where, $regex) |
-| `no-weak-cert-validation` | Critical | Disabled TLS certificate validation |
 | `no-xss-dom` | High | innerHTML, document.write, eval |
 | `no-unsafe-regex` | High | ReDoS patterns, nested quantifiers |
 | `no-path-traversal` | High | File ops with user-controlled paths |
 | `no-unvalidated-redirect` | High | Open redirect via user-controlled input |
 | `no-unrestricted-file-upload` | High | File upload without extension validation |
 | `no-weak-crypto` | High | MD5, SHA1, DES, RC4 usage |
-| `no-prototype-pollution` | High | Unsafe merge/assign, Object.fromEntries |
-| `no-ssrf` | High | Server-side request forgery with dynamic URLs |
-| `no-insecure-deserialization` | High | JSON.parse/eval on untrusted input |
-| `no-cors-misconfiguration` | High | Wildcard CORS origins |
-| `no-insecure-randomness` | High | Math.random() in security-sensitive context |
-| `no-debugger` | Medium | debugger statements in committed code |
-| `no-insecure-http` | Medium | Plain HTTP instead of HTTPS |
-| `no-stack-trace-leak` | Medium | Error stack traces sent to client |
+| `no-debugger` | High | debugger statements in committed code |
 | `no-console` | Info | console.log and similar in production |
-
-### Suppress Findings
-
-```typescript
-const password = "admin123"; // arhus-ignore-line
-const token = "ghp_abc123def456"; // arhus-ignore-line: no-hardcoded-secrets
-```
-
-Use `// arhus-ignore-line` to skip all findings on a line, or `// arhus-ignore-line: rule-id` to skip a specific rule.
 
 ## Configuration
 
