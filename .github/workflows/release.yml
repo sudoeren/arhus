@@ -24,7 +24,6 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: '20'
-          registry-url: 'https://registry.npmjs.org'
 
       - run: bun install --frozen-lockfile
 
@@ -38,10 +37,13 @@ jobs:
           generate_release_notes: true
 
       - name: Publish to npm
-        run: npm publish --provenance --access public
+        run: |
+          npm install -g npm@latest --ignore-engines
+          npm publish --provenance --access public
 
       - name: Publish to GitHub Packages
         run: |
+          npm install -g npm@latest --ignore-engines
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
           npm pkg set name="@sudoeren/arhus-cli"
           npm publish --registry https://npm.pkg.github.com
