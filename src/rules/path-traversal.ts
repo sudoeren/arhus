@@ -1,6 +1,7 @@
 import ts from 'typescript';
 import { Severity } from '../types';
 import type { Rule, RuleContext, Finding } from '../types';
+import { getLocation, hasUserInput } from '../utils';
 
 const FS_OPS = new Set([
   'readFile', 'readFileSync', 'writeFile', 'writeFileSync',
@@ -12,18 +13,6 @@ const FS_OPS = new Set([
   'rename', 'renameSync', 'copyFile', 'copyFileSync',
   'lstat', 'lstatSync',
 ]);
-
-function getLocation(sourceFile: ts.SourceFile, pos: number) {
-  const { line, character } = ts.getLineAndCharacterOfPosition(sourceFile, pos);
-  return { line: line + 1, column: character + 1 };
-}
-
-function hasUserInput(node: ts.Node): boolean {
-  if (ts.isBinaryExpression(node) && node.operatorToken.kind === ts.SyntaxKind.PlusToken) return true;
-  if (ts.isTemplateExpression(node) && node.templateSpans.length > 0) return true;
-  if (ts.isCallExpression(node)) return true;
-  return false;
-}
 
 export const pathTraversalRule: Rule = {
   id: 'no-path-traversal',

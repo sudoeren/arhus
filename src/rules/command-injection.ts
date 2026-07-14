@@ -1,19 +1,9 @@
 import ts from 'typescript';
 import { Severity } from '../types';
 import type { Rule, RuleContext, Finding } from '../types';
+import { getLocation, hasUserInput } from '../utils';
 
 const EXEC_FUNCTIONS = new Set(['exec', 'execSync', 'execFile', 'execFileSync', 'spawn', 'spawnSync']);
-
-function getLocation(sourceFile: ts.SourceFile, pos: number) {
-  const { line, character } = ts.getLineAndCharacterOfPosition(sourceFile, pos);
-  return { line: line + 1, column: character + 1 };
-}
-
-function hasDynamicInput(node: ts.Node): boolean {
-  if (ts.isBinaryExpression(node) && node.operatorToken.kind === ts.SyntaxKind.PlusToken) return true;
-  if (ts.isTemplateExpression(node) && node.templateSpans.length > 0) return true;
-  return false;
-}
 
 export const commandInjectionRule: Rule = {
   id: 'no-command-injection',
@@ -36,7 +26,7 @@ export const commandInjectionRule: Rule = {
 
         if (EXEC_FUNCTIONS.has(funcName)) {
           const firstArg = node.arguments[0];
-          if (firstArg && hasDynamicInput(firstArg)) {
+          if (firstArg && hasUserInput(firstArg)) {
             const nameSpan = ts.isPropertyAccessExpression(node.expression)
               ? node.expression.name.getStart(sourceFile)
               : node.expression.getStart(sourceFile);

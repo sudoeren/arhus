@@ -1,6 +1,7 @@
 import ts from 'typescript';
 import { Severity } from '../types';
 import type { Rule, RuleContext, Finding } from '../types';
+import { getLocation } from '../utils';
 
 const WEAK_ALGOS: [string, string][] = [
   ['3des', '3DES'],
@@ -21,11 +22,6 @@ const CRYPTO_METHODS = new Set([
   'createCipher',
   'createDecipher',
 ]);
-
-function getLocation(sourceFile: ts.SourceFile, pos: number) {
-  const { line, character } = ts.getLineAndCharacterOfPosition(sourceFile, pos);
-  return { line: line + 1, column: character + 1 };
-}
 
 export const weakCryptoRule: Rule = {
   id: 'no-weak-crypto',

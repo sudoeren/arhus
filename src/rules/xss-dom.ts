@@ -1,6 +1,7 @@
 import ts from 'typescript';
 import { Severity } from '../types';
 import type { Rule, RuleContext, Finding } from '../types';
+import { getLocation } from '../utils';
 
 const DANGEROUS_PROPERTIES = new Set([
   'innerHTML',
@@ -15,11 +16,6 @@ const DANGEROUS_METHODS = new Set([
 const DANGEROUS_GLOBALS = new Set([
   'eval',
 ]);
-
-function getLocation(sourceFile: ts.SourceFile, pos: number) {
-  const { line, character } = ts.getLineAndCharacterOfPosition(sourceFile, pos);
-  return { line: line + 1, column: character + 1 };
-}
 
 function isDocumentAccess(expr: ts.Expression): boolean {
   if (ts.isIdentifier(expr) && expr.text === 'document') return true;

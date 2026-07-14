@@ -1,6 +1,7 @@
 import ts from 'typescript';
 import { Severity } from '../types';
 import type { Rule, RuleContext, Finding } from '../types';
+import { getLocation } from '../utils';
 
 const SQL_KEYWORDS = /\b(SELECT\s|INSERT\s+INTO\s|UPDATE\s|DELETE\s+FROM\s|DROP\s+TABLE\s|CREATE\s+TABLE\s|ALTER\s+TABLE\s|TRUNCATE\s|GRANT\s|REVOKE\s)/i;
 
@@ -8,11 +9,6 @@ const DB_METHODS = new Set([
   'query', 'execute', 'run', 'exec', 'all', 'get',
   'raw', 'sql',
 ]);
-
-function getLocation(sourceFile: ts.SourceFile, pos: number) {
-  const { line, character } = ts.getLineAndCharacterOfPosition(sourceFile, pos);
-  return { line: line + 1, column: character + 1 };
-}
 
 function isSqlString(text: string): boolean {
   return SQL_KEYWORDS.test(text);

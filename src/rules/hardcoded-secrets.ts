@@ -1,6 +1,7 @@
 import ts from 'typescript';
 import { Severity } from '../types';
 import type { Rule, RuleContext, Finding } from '../types';
+import { getLocation } from '../utils';
 
 const SECRET_SUBSTRINGS = [
   'password', 'passwd', 'pwd', 'pass',
@@ -27,11 +28,6 @@ const MIN_ENTROPY_LENGTH = 20;
 function isSuspiciousName(name: string): boolean {
   const lower = name.toLowerCase().replace(/[-_\s.]/g, '');
   return SECRET_SUBSTRINGS.some(s => lower.includes(s)) || lower === 'key';
-}
-
-function getLocation(sourceFile: ts.SourceFile, pos: number) {
-  const { line, character } = ts.getLineAndCharacterOfPosition(sourceFile, pos);
-  return { line: line + 1, column: character + 1 };
 }
 
 function looksLikeSecret(value: string): string | null {

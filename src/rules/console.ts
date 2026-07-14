@@ -1,13 +1,9 @@
 import ts from 'typescript';
 import { Severity } from '../types';
 import type { Rule, RuleContext, Finding } from '../types';
+import { getLocation } from '../utils';
 
 const CONSOLE_METHODS = new Set(['log', 'error', 'warn', 'info', 'debug', 'table', 'trace', 'dir', 'assert', 'count', 'time', 'timeEnd']);
-
-function getLocation(sourceFile: ts.SourceFile, pos: number) {
-  const { line, character } = ts.getLineAndCharacterOfPosition(sourceFile, pos);
-  return { line: line + 1, column: character + 1 };
-}
 
 export const consoleRule: Rule = {
   id: 'no-console',

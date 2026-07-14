@@ -1,20 +1,9 @@
 import ts from 'typescript';
 import { Severity } from '../types';
 import type { Rule, RuleContext, Finding } from '../types';
+import { getLocation, isDynamic } from '../utils';
 
-function getLocation(sourceFile: ts.SourceFile, pos: number) {
-  const { line, character } = ts.getLineAndCharacterOfPosition(sourceFile, pos);
-  return { line: line + 1, column: character + 1 };
-}
-
-function isDynamic(node: ts.Node): boolean {
-  if (ts.isBinaryExpression(node) && node.operatorToken.kind === ts.SyntaxKind.PlusToken) return true;
-  if (ts.isTemplateExpression(node) && node.templateSpans.length > 0) return true;
-  if (ts.isIdentifier(node)) return true;
-  if (ts.isPropertyAccessExpression(node)) return true;
-  if (ts.isCallExpression(node)) return true;
-  return false;
-}
+const WRITE_METHODS = new Set(['writeFile', 'writeFileSync', 'createWriteStream', 'copyFile', 'copyFileSync', 'rename', 'renameSync']);
 
 export const unrestrictedFileUploadRule: Rule = {
   id: 'no-unrestricted-file-upload',
@@ -51,8 +40,7 @@ export const unrestrictedFileUploadRule: Rule = {
           }
         }
 
-        const writeMethods = new Set(['writeFile', 'writeFileSync', 'createWriteStream']);
-        if (writeMethods.has(methodName) && node.arguments.length > 0) {
+        if (WRITE_METHODS.has(methodName) && node.arguments.length > 0) {
           const pathArg = node.arguments[0]!;
           if (isDynamic(pathArg)) {
             const span = callee.name.getStart(sourceFile);

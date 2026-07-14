@@ -5,7 +5,24 @@ import { relative, resolve } from 'node:path';
 import { getActiveRules } from './rule';
 import type { Finding, Rule, ScanResult, RuleContext, ArhusConfig } from './types';
 
-export async function scanFiles(targetPath: string, config: ArhusConfig): Promise<ScanResult[]> {
+export interface ProgressCallback {
+  onFileScanned(file: string, index: number, total: number): void;
+}
+
+const IGNORE_RE = /\/\/\s*arhus-ignore-line(?::\s*(\S+))?/;
+
+function isIgnored(sourceText: string, finding: Finding): boolean {
+  const lines = sourceText.split('\n');
+  const lineIdx = finding.line - 1;
+  if (lineIdx < 0 || lineIdx >= lines.length) return false;
+  const match = lines[lineIdx]!.match(IGNORE_RE);
+  if (!match) return false;
+  const ruleFilter = match[1];
+  if (!ruleFilter) return true;
+  return ruleFilter === finding.ruleId;
+}
+
+export async function scanFiles(targetPath: string, config: ArhusConfig, onProgress?: ProgressCallback): Promise<ScanResult[]> {
   const cwd = resolve(targetPath);
 
   const files = await fg(config.include, {
@@ -17,8 +34,11 @@ export async function scanFiles(targetPath: string, config: ArhusConfig): Promis
 
   const rules = getActiveRules(config);
   const results: ScanResult[] = [];
+  const total = files.length;
 
-  for (const file of files) {
+  for (let i = 0; i < total; i++) {
+    const file = files[i]!;
+    onProgress?.onFileScanned(file, i + 1, total);
     const findings = scanFile(file, rules);
     if (findings.length > 0) {
       results.push({ file: relative(cwd, file), findings });
@@ -28,7 +48,7 @@ export async function scanFiles(targetPath: string, config: ArhusConfig): Promis
   return results;
 }
 
-function scanFile(filePath: string, rules: Rule[]): Finding[] {
+export function scanFile(filePath: string, rules: Rule[]): Finding[] {
   let sourceText: string;
   try {
     sourceText = readFileSync(filePath, 'utf-8');
@@ -42,7 +62,12 @@ function scanFile(filePath: string, rules: Rule[]): Finding[] {
 
   for (const rule of rules) {
     try {
-      findings.push(...rule.check(context));
+      const ruleFindings = rule.check(context);
+      for (const finding of ruleFindings) {
+        if (!isIgnored(sourceText, finding)) {
+          findings.push(finding);
+        }
+      }
     } catch {
       // skip rule on error, continue with others
     }

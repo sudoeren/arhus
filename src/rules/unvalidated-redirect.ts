@@ -1,21 +1,9 @@
 import ts from 'typescript';
 import { Severity } from '../types';
 import type { Rule, RuleContext, Finding } from '../types';
+import { getLocation, isDynamic } from '../utils';
 
 const REDIRECT_METHODS = new Set(['redirect', 'replace', 'assign']);
-
-function getLocation(sourceFile: ts.SourceFile, pos: number) {
-  const { line, character } = ts.getLineAndCharacterOfPosition(sourceFile, pos);
-  return { line: line + 1, column: character + 1 };
-}
-
-function isDynamic(node: ts.Node): boolean {
-  if (ts.isBinaryExpression(node) && node.operatorToken.kind === ts.SyntaxKind.PlusToken) return true;
-  if (ts.isTemplateExpression(node) && node.templateSpans.length > 0) return true;
-  if (ts.isCallExpression(node)) return true;
-  if (ts.isIdentifier(node)) return true;
-  return false;
-}
 
 export const unvalidatedRedirectRule: Rule = {
   id: 'no-unvalidated-redirect',

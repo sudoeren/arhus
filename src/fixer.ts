@@ -25,27 +25,50 @@ export function applyFixes(findings: Finding[], dryRun: boolean): FixResult[] {
     try {
       let source = readFileSync(file, 'utf-8');
 
-      for (const finding of fileFindings) {
-        if (!finding.suggestion) {
+      const sorted = fileFindings
+        .filter(f => f.suggestion)
+        .sort((a, b) => (b.line - a.line) || (b.column - a.column));
+
+      for (const finding of sorted) {
+        const lines = source.split('\n');
+        const startLineIdx = finding.line - 1;
+        const endLineIdx = (finding.endLine ?? finding.line) - 1;
+
+        if (startLineIdx < 0 || endLineIdx >= lines.length) {
           skipped++;
           continue;
         }
-        // basic replacement: suggestion is the replacement text
-        const lines = source.split('\n');
-        const lineIdx = finding.line - 1;
-        if (lineIdx < lines.length) {
-          const line = lines[lineIdx]!;
-          const col = finding.column - 1;
-          const endCol = (finding.endColumn ?? col + 1) - 1;
-          const before = line.slice(0, col);
-          const after = line.slice(endCol);
-          lines[lineIdx] = before + finding.suggestion + after;
-          fixed++;
+
+        const startCol = finding.column - 1;
+        const endCol = (finding.endColumn ?? startCol + 1) - 1;
+
+        if (startLineIdx === endLineIdx) {
+          const line = lines[startLineIdx]!;
+          if (startCol > line.length || endCol > line.length) {
+            skipped++;
+            continue;
+          }
+          lines[startLineIdx] = line.slice(0, startCol) + finding.suggestion! + line.slice(endCol);
+        } else {
+          const firstLine = lines[startLineIdx]!;
+          const lastLine = lines[endLineIdx]!;
+          if (startCol > firstLine.length || endCol > lastLine.length) {
+            skipped++;
+            continue;
+          }
+          lines[startLineIdx] = firstLine.slice(0, startCol) + finding.suggestion!;
+          lines[endLineIdx] = lastLine.slice(endCol);
+          for (let i = startLineIdx + 1; i < endLineIdx; i++) {
+            lines[i] = '';
+          }
         }
+
+        source = lines.join('\n');
+        fixed++;
       }
 
       if (!dryRun && fixed > 0) {
-        writeFileSync(file, lines.join('\n'), 'utf-8');
+        writeFileSync(file, source, 'utf-8');
       }
     } catch {
       skipped = fileFindings.length;

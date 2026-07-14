@@ -14,7 +14,7 @@ const program = new Command();
 program
   .name('arhus')
   .description('scan. fix. repeat. — local-first security analysis for TS & JS')
-  .version('0.1.0');
+  .version('0.3.8');
 
 program
   .command('scan [path]')
@@ -25,9 +25,16 @@ program
     const config = loadConfig(cwd);
     registerAllRules();
 
-    console.log(`\n  Scanning ${relative(process.cwd(), cwd) || '.'}...\n`);
+    console.log(`\n  Scanning ${relative(process.cwd(), cwd) || '.'}...`);
 
-    const results = await scanFiles(cwd, config);
+    const results = await scanFiles(cwd, config, {
+      onFileScanned(file, index, total) {
+        process.stdout.write(`\r  Scanning files... ${index}/${total}`);
+      },
+    });
+
+    console.log('\n');
+
     switch (options.format) {
       case 'json':
         console.log(jsonReport(results));
@@ -54,7 +61,15 @@ program
     const config = loadConfig(cwd);
     registerAllRules();
 
-    const results = await scanFiles(cwd, config);    const allFindings = results.flatMap(r => r.findings.map(f => ({ ...f, file: resolve(cwd, r.file) })));
+    const results = await scanFiles(cwd, config, {
+      onFileScanned(file, index, total) {
+        process.stdout.write(`\r  Scanning files... ${index}/${total}`);
+      },
+    });
+
+    console.log('\n');
+
+    const allFindings = results.flatMap(r => r.findings.map(f => ({ ...f, file: resolve(cwd, r.file) })));
 
     const fixResults = applyFixes(
       allFindings.filter(f => f.suggestion),
