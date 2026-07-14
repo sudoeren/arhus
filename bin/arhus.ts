@@ -28,7 +28,7 @@ program
     console.log(`\n  Scanning ${relative(process.cwd(), cwd) || '.'}...`);
 
     const results = await scanFiles(cwd, config, {
-      onFileScanned(file, index, total) {
+      onFileScanned(_file, index, total) {
         process.stdout.write(`\r  Scanning files... ${index}/${total}`);
       },
     });
@@ -62,7 +62,7 @@ program
     registerAllRules();
 
     const results = await scanFiles(cwd, config, {
-      onFileScanned(file, index, total) {
+      onFileScanned(_file, index, total) {
         process.stdout.write(`\r  Scanning files... ${index}/${total}`);
       },
     });
