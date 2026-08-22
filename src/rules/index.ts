@@ -20,6 +20,11 @@ import { insecureRandomnessRule } from './insecure-randomness';
 import { insecureDeserializationRule } from './insecure-deserialization';
 import { corsMisconfigurationRule } from './cors-misconfiguration';
 import { stackTraceLeakRule } from './stack-trace-leak';
+import { csrfRule } from './csrf';
+import { jwtInsecureRule } from './jwt-insecure';
+import { xxeRule } from './xxe';
+import { insecureCookiesRule } from './insecure-cookies';
+import { missingSecurityHeadersRule } from './missing-security-headers';
 
 export function registerAllRules(): void {
   registerRule(hardcodedSecretsRule);
@@ -42,4 +47,9 @@ export function registerAllRules(): void {
   registerRule(insecureDeserializationRule);
   registerRule(corsMisconfigurationRule);
   registerRule(stackTraceLeakRule);
+  registerRule(csrfRule);
+  registerRule(jwtInsecureRule);
+  registerRule(xxeRule);
+  registerRule(insecureCookiesRule);
+  registerRule(missingSecurityHeadersRule);
 }

@@ -1,11 +1,11 @@
 ---
 name: arhus
-description: Use arhus CLI to scan codebases for security vulnerabilities. Use when the user asks to run a security scan, find security issues, fix vulnerabilities, lint for security, detect hardcoded secrets, XSS, SQL injection, NoSQL injection, command injection, SSRF, path traversal, unsafe regex, weak crypto, prototype pollution, insecure deserialization, CORS misconfiguration, certificate validation bypass, stack trace leak, insecure randomness, insecure HTTP, or when the agent should validate code before committing or deploying. Triggers include "scan for vulnerabilities", "security scan", "check security", "arhus", "run arhus", "find security issues", "security audit", "check my code", "prototype pollution", "nosql injection", "ssrf".
+description: Use arhus CLI to scan codebases for security vulnerabilities. Use when the user asks to run a security scan, find security issues, fix vulnerabilities, lint for security, detect hardcoded secrets, XSS, SQL injection, NoSQL injection, command injection, SSRF, path traversal, unsafe regex, weak crypto, prototype pollution, insecure deserialization, CORS misconfiguration, certificate validation bypass, stack trace leak, insecure randomness, insecure HTTP, CSRF, JWT, XXE, insecure cookies, missing security headers, or when the agent should validate code before committing or deploying. Triggers include "scan for vulnerabilities", "security scan", "check security", "arhus", "run arhus", "find security issues", "security audit", "check my code", "prototype pollution", "nosql injection", "ssrf", "csrf", "jwt", "xxe".
 ---
 
 # arhus
 
-arhus is a local-first security scanner for TypeScript and JavaScript. It uses AST analysis to detect 20 types of security vulnerabilities with zero telemetry.
+arhus is a local-first security scanner for TypeScript and JavaScript. It uses AST analysis to detect 25 types of security vulnerabilities with zero telemetry.
 
 ## Preconditions
 
@@ -51,7 +51,7 @@ arhus fix .
 arhus init
 ```
 
-## Rules (20 rules)
+## Rules (25 rules)
 
 | Rule ID | Severity | Description |
 |---|---|---|
@@ -71,6 +71,11 @@ arhus init
 | `no-unvalidated-redirect` | High | Open redirect via dynamic URLs |
 | `no-unrestricted-file-upload` | High | File upload without extension validation |
 | `no-cors-misconfiguration` | High | Overly permissive CORS configurations |
+| `no-csrf` | Medium | State-changing routes without CSRF protection |
+| `no-jwt-insecure` | High/Critical | Insecure JWT (none alg, hardcoded secret, no verify) |
+| `no-xxe` | High | XML external entity via noent/dtd |
+| `no-insecure-cookies` | Medium | Cookies without secure flags |
+| `no-missing-security-headers` | Medium | Missing helmet / security headers |
 | `no-debugger` | Medium/High | debugger statements in code |
 | `no-stack-trace-leak` | Medium | Error stack traces sent to clients |
 | `no-insecure-http` | Medium/Low | Plain HTTP instead of HTTPS |

@@ -73,6 +73,11 @@ arhus init
 | `no-insecure-deserialization` | High | JSON.parse/eval on untrusted input |
 | `no-cors-misconfiguration` | High | Wildcard CORS origins |
 | `no-insecure-randomness` | High | Math.random() in security-sensitive context |
+| `no-csrf` | Medium | State-changing routes without CSRF protection |
+| `no-jwt-insecure` | High | Insecure JWT (none alg, hardcoded secret) |
+| `no-xxe` | High | XML external entity (XXE) via noent/dtd |
+| `no-insecure-cookies` | Medium | Cookies without secure flags |
+| `no-missing-security-headers` | Medium | Missing helmet / security headers |
 | `no-debugger` | Medium | debugger statements in committed code |
 | `no-insecure-http` | Medium | Plain HTTP instead of HTTPS |
 | `no-stack-trace-leak` | Medium | Error stack traces sent to client |
