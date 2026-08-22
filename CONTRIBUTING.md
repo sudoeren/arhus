@@ -62,9 +62,9 @@ bun run build
 ## Commit Messages
 
 This project follows [Conventional Commits](https://www.conventionalcommits.org/):
-- `feat:` — new feature
-- `fix:` — bug fix
-- `chore:` — maintenance
-- `docs:` — documentation
-- `test:` — tests
-- `ci:` — CI/CD changes
+- `feat:` - new feature
+- `fix:` - bug fix
+- `chore:` - maintenance
+- `docs:` - documentation
+- `test:` - tests
+- `ci:` - CI/CD changes

@@ -35,7 +35,7 @@ export function validateConfig(raw: string, configPath: string): string[] {
   try {
     parsed = JSON.parse(raw) as Record<string, unknown>;
   } catch (err) {
-    warnings.push(`${configPath}: Invalid JSON — ${(err as Error).message}`);
+    warnings.push(`${configPath}: Invalid JSON - ${(err as Error).message}`);
     return warnings;
   }
 

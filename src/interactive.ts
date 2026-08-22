@@ -12,7 +12,7 @@ import type { Finding, ArhusConfig } from './types';
 
 export async function interactiveMode(targetPath?: string) {
   console.log('');
-  console.log('  ' + chalk.bold.cyan('arhus') + chalk.dim(' — scan. fix. repeat.'));
+  console.log('  ' + chalk.bold.cyan('arhus') + chalk.dim(' - scan. fix. repeat.'));
   console.log('');
 
   const action = await select({

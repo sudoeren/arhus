@@ -27,7 +27,7 @@ export const weakCertValidationRule: Rule = {
 
             findings.push({
               ruleId: 'no-weak-cert-validation',
-              message: `"${name}" disabled — TLS certificate validation is turned off`,
+              message: `"${name}" disabled - TLS certificate validation is turned off`,
               severity: Severity.Critical,
               file: context.fileName,
               line: loc.line,

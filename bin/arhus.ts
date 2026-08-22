@@ -13,7 +13,7 @@ const program = new Command();
 
 program
   .name('arhus')
-  .description('scan. fix. repeat. — local-first security analysis for TS & JS')
+  .description('scan. fix. repeat. - local-first security analysis for TS & JS')
   .version('0.3.12');
 
 program

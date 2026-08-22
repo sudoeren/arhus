@@ -89,9 +89,9 @@ In `.arhusrc`:
 }
 ```
 
-- `false` — disable the rule
-- `"critical"`, `"high"`, etc. — override severity
-- `{ "severity": "high" }` — object form
+- `false` - disable the rule
+- `"critical"`, `"high"`, etc. - override severity
+- `{ "severity": "high" }` - object form
 
 ## Interpreting Findings
 

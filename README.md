@@ -4,7 +4,7 @@
 
 # arhus
 
-<p align="center"><b>scan. fix. repeat.</b> — local-first security analysis for TypeScript & JavaScript.</p>
+<p align="center"><b>scan. fix. repeat.</b> - local-first security analysis for TypeScript & JavaScript.</p>
 
 <p align="center">
   <a href="https://www.npmjs.com/package/arhus-cli"><img src="https://img.shields.io/npm/dt/arhus-cli?label=total%20downloads" alt="npm total downloads"></a>
@@ -14,7 +14,7 @@
 
 ## Why arhus
 
-arhus runs **entirely offline**. No telemetry, no cloud, no API calls. Your source code never leaves your machine. Unlike ESLint plugins that focus on style and surface-level patterns, arhus performs AST-aware semantic checks — tracing taint from user input through function calls — without the overhead of a full SAST platform.
+arhus runs **entirely offline**. No telemetry, no cloud, no API calls. Your source code never leaves your machine. Unlike ESLint plugins that focus on style and surface-level patterns, arhus performs AST-aware semantic checks - tracing taint from user input through function calls - without the overhead of a full SAST platform.
 
 ## Install
 
@@ -37,7 +37,7 @@ arhus
 # Scan a directory
 arhus scan ./src
 
-# Auto-fix (dry run — preview only)
+# Auto-fix (dry run - preview only)
 arhus fix ./src --dry-run
 
 # Apply fixes
@@ -114,4 +114,4 @@ Project-level `.arhusrc` files are not removed automatically.
 
 ## License
 
-MIT — see [LICENSE](LICENSE) for details.
+MIT - see [LICENSE](LICENSE) for details.
