@@ -3,17 +3,14 @@ import { Severity } from '../types';
 import type { Rule, RuleContext, Finding } from '../types';
 import { getLocation } from '../utils';
 
-const DANGEROUS_MERGE_PATTERNS = [
-  'Object.assign',
-  '_.merge',
-  '_.extend',
-  '_.assign',
-  '$.extend',
+const DANGEROUS_MERGE_METHODS = new Set([
+  'assign',
   'merge',
+  'extend',
   'deepMerge',
   'deepmerge',
   'mergeDeep',
-];
+]);
 
 export const prototypePollutionRule: Rule = {
   id: 'no-prototype-pollution',
@@ -35,11 +32,11 @@ export const prototypePollutionRule: Rule = {
           calleeText = callee.text;
         }
 
-        if (calleeText && DANGEROUS_MERGE_PATTERNS.some(p => calleeText.includes(p))) {
-          const hasDynamicTarget = node.arguments.length > 0 && (
-            ts.isIdentifier(node.arguments[0]!) ||
-            ts.isCallExpression(node.arguments[0]!) ||
-            ts.isPropertyAccessExpression(node.arguments[0]!)
+        if (calleeText && DANGEROUS_MERGE_METHODS.has(calleeText)) {
+          const hasDynamicTarget = node.arguments.some(a =>
+            ts.isIdentifier(a) ||
+            ts.isCallExpression(a) ||
+            ts.isPropertyAccessExpression(a)
           );
 
           if (hasDynamicTarget) {
@@ -60,7 +57,7 @@ export const prototypePollutionRule: Rule = {
           }
         }
 
-        if (ts.isPropertyAccessExpression(callee) && callee.name.text === 'from' && ts.isIdentifier(callee.expression)) {
+        if (ts.isPropertyAccessExpression(callee) && callee.name.text === 'fromEntries' && ts.isIdentifier(callee.expression)) {
           if (callee.expression.text === 'Object' && node.arguments.length > 0) {
             const span = callee.getStart(sourceFile);
             const loc = getLocation(sourceFile, span);
@@ -81,24 +78,23 @@ export const prototypePollutionRule: Rule = {
       }
 
       if (ts.isBinaryExpression(node) && node.operatorToken.kind === ts.SyntaxKind.EqualsToken) {
-        if (ts.isPropertyAccessExpression(node.left)) {
-          const prop = node.left;
-          if ((prop.name.text === '__proto__' || prop.name.text === 'prototype') &&
-              ts.isPropertyAccessExpression(prop.expression)) {
-            const span = prop.name.getStart(sourceFile);
-            const loc = getLocation(sourceFile, span);
-
-            findings.push({
-              ruleId: 'no-prototype-pollution',
-              message: `Direct assignment to "${prop.name.text}" is a prototype pollution vector`,
-              severity: Severity.Critical,
-              file: context.fileName,
-              line: loc.line,
-              column: loc.column,
-              endLine: loc.line,
-              endColumn: loc.column + prop.name.text.length,
-            });
-          }
+        const leftText = node.left.getText(sourceFile);
+        if (leftText.includes('__proto__') || leftText.includes('.prototype')) {
+          // Find the offending segment
+          let propName = '__proto__';
+          if (leftText.includes('prototype')) propName = 'prototype';
+          const span = node.left.getStart(sourceFile);
+          const loc = getLocation(sourceFile, span);
+          findings.push({
+            ruleId: 'no-prototype-pollution',
+            message: `Direct assignment to "${propName}" is a prototype pollution vector`,
+            severity: Severity.Critical,
+            file: context.fileName,
+            line: loc.line,
+            column: loc.column,
+            endLine: loc.line,
+            endColumn: loc.column + propName.length,
+          });
         }
       }
 

@@ -16,7 +16,8 @@ export const corsMisconfigurationRule: Rule = {
 
     function walk(node: ts.Node) {
       if (ts.isPropertyAssignment(node)) {
-        const name = node.name.getText(sourceFile);
+        const rawName = node.name.getText(sourceFile);
+        const name = rawName.replace(/^['"]|['"]$/g, '');
 
         if (name === 'Access-Control-Allow-Origin' || name === 'allowOrigin' || name === 'origin') {
           let value = '';

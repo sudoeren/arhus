@@ -25,6 +25,7 @@ export const ssrfRule: Rule = {
       if (ts.isTemplateExpression(node) && node.templateSpans.length > 0) return true;
       if (ts.isBinaryExpression(node) && node.operatorToken.kind === ts.SyntaxKind.PlusToken) return true;
       if (ts.isIdentifier(node)) return true;
+      if (ts.isPropertyAccessExpression(node)) return true;
       if (ts.isCallExpression(node)) return true;
       return false;
     }

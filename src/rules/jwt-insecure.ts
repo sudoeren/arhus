@@ -38,7 +38,7 @@ function hasNoneAlg(options: ts.Expression | undefined, sourceFile: ts.SourceFil
           }
         }
       }
-      if (name === 'ignoreExpiration' && init.kind === ts.SyntaxKind.TrueKeyword) return true;
+      if (name === 'ignoreExpiration' && prop.initializer.kind === ts.SyntaxKind.TrueKeyword) return true;
     }
   }
   return false;
