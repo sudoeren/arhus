@@ -14,7 +14,7 @@ const program = new Command();
 program
   .name('arhus')
   .description('scan. fix. repeat. - local-first security analysis for TS & JS')
-  .version('0.3.12');
+  .version('0.4.0');
 
 program
   .command('scan [path]')
